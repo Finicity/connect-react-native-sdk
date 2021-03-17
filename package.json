@@ -1,12 +1,20 @@
 {
-  "main": "node_modules/expo/AppEntry.js",
+  "name": "@finicity/connect-react-native",
+  "version": "0.0.1",
+  "description": "Finicity Connect SDK for ReactNative using Expo",
+  "main": "dist/index.js",
+  "keywords": [
+    "finicity",
+    "finicity connect"
+  ],
   "scripts": {
     "start": "expo start",
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
     "eject": "expo eject",
-    "prepare": "bob build",
+    "build": "bob build",
+    "test:version_bump": "test $npm_package_version != $(npm show $npm_package_name version) || (echo 'Failing... You must bump package.json and package-lock.json' && exit 1)",
     "main": "dist/module/index.js",
     "module": "dist/module/index.js",
     "react-native": "src/index.ts",
@@ -32,9 +40,9 @@
     "@types/react": "~16.9.35",
     "@types/react-dom": "~16.9.8",
     "@types/react-native": "~0.63.2",
+    "npm-version": "^1.1.0",
     "typescript": "~4.0.0"
   },
-  "private": true,
   "@react-native-community/bob": {
     "source": "src",
     "output": "dist",
