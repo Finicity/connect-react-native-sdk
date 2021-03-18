@@ -3,18 +3,10 @@ import { Modal, Platform } from 'react-native';
 import { WebView } from 'react-native-webview';
 import * as WebBrowser from 'expo-web-browser';
 import Constants from 'expo-constants';
+import { Options } from './interfaces';
+import { ConnectEvents, CONNECT_SDK_VERSION, SDK_PLATFORM, PING_TIMEOUT } from './constants';
 
-const CONNECT_SDK_VERSION = '1.0.0';
-const SDK_PLATFORM = 'reactNative';
-const PING_TIMEOUT = 1000;
-
-const styles = {
-  container: {
-    flex: 1,
-  },
-};
-
-const defaultOptions = {
+const defaultOptions: Options = {
   loaded: (event: any) => {},
   done: (event: any) => {},
   cancel: (event: any) => {},
@@ -23,25 +15,8 @@ const defaultOptions = {
   route: (event: any) => {}
 };
 
-const ConnectEvents = {
-  // Internal events used by Connect
-  ACK: 'ack',
-  CLOSE_POPUP: 'closePopup',
-  PING: 'ping',
-  URL: 'url',
-
-  // App events exposed to developers
-  CANCEL: 'cancel',
-  DONE: 'done',
-  ERROR: 'error',
-  LOADED: 'loaded',
-  ROUTE: 'route',
-  SUCCESS: 'success',
-  USER: 'user',
-};
-
 class FinicityConnect extends Component {
-  webViewRef: any = null;
+  webViewRef: WebView | null = null;
   state = {
     show: false,
     connectUrl: '',
@@ -49,6 +24,7 @@ class FinicityConnect extends Component {
     pingedConnectSuccessfully: false,
     pingIntervalId: 0,
     options: defaultOptions,
+    browserDisplayed: false
   };
   
   constructor(props: any) {
@@ -57,6 +33,7 @@ class FinicityConnect extends Component {
 
   resetState = () => {
     this.setState({ show: false });
+    this.setState({browserDisplayed: false});
     this.setState({ pingingConnect: false });
     this.setState({ pingedConnectSuccessfully: false });
     this.setState({ pingIntervalId: 0 });
@@ -64,7 +41,7 @@ class FinicityConnect extends Component {
     this.webViewRef = null;
   };
 
-  connectWithUrl = (connectUrl: string, options: any) => {
+  connectWithUrl = (connectUrl: string, options: Options) => {
     this.setState({ connectUrl: connectUrl });
     this.setState({ options: { ...defaultOptions, ...options } });
     this.setState({ show: true });
@@ -75,7 +52,7 @@ class FinicityConnect extends Component {
   };
 
   postMessage(eventData: any) {
-    (this.webViewRef as any).postMessage(JSON.stringify(eventData));
+    this.webViewRef?.postMessage(JSON.stringify(eventData));
   }
 
   pingConnect = () => {
@@ -115,7 +92,8 @@ class FinicityConnect extends Component {
 
   dismissBrowser = () => {
     this.postMessage({ type: 'window', closed: true });
-    if (Platform.OS === 'ios') {
+    if (Platform.OS === 'ios' && this.state.browserDisplayed) {
+      this.state.browserDisplayed = false;
       WebBrowser.dismissBrowser();
     }
     // TODO: dismiss browser through deep linking (requires changes on the backend)
@@ -123,6 +101,7 @@ class FinicityConnect extends Component {
 
   openBrowser = async (url: string) => {
     // NOTE: using openBrowserAsync is inconsistent between iOS and Android
+    this.state.browserDisplayed = true;
     await WebBrowser.openAuthSessionAsync(url, Constants.linkingUri);
     this.dismissBrowser();
   };
@@ -145,10 +124,10 @@ class FinicityConnect extends Component {
             const eventData = parseEventData(event.nativeEvent.data);
             const eventType = eventData.type;
             // console.log("CONNECT EVT-TYPE: " + eventType);
-            if (eventType === ConnectEvents.URL) {
+            if (eventType === ConnectEvents.URL && !this.state.browserDisplayed) {
               const url = eventData.url;
               this.openBrowser(url);
-            } else if (eventType === ConnectEvents.CLOSE_POPUP) {
+            } else if (eventType === ConnectEvents.CLOSE_POPUP && this.state.browserDisplayed) {
               this.dismissBrowser();
             } else if (eventType === ConnectEvents.ACK) {
               this.state.pingedConnectSuccessfully = true;

@@ -120,6 +120,7 @@ publish:
   stage: publish
   only:
     - master
+  when: manual
   script:
     - echo -e "registry=http://registry.fini.city:8081/repository/npm-private/\n//registry.fini.city:8081/repository/npm-private/:_authToken=${NPM_AUTH_TOKEN}" > ./.npmrc
     - npm install
