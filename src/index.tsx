@@ -41,9 +41,9 @@ const ConnectEvents = {
 };
 
 class FinicityConnect extends Component {
+  webViewRef: any = null;
   state = {
     show: false,
-    webView: null,
     connectUrl: '',
     pingingConnect: false,
     pingedConnectSuccessfully: false,
@@ -60,8 +60,8 @@ class FinicityConnect extends Component {
     this.setState({ pingingConnect: false });
     this.setState({ pingedConnectSuccessfully: false });
     this.setState({ pingIntervalId: 0 });
-    this.setState({ webView: null });
     this.setState({ connectUrl: '' });
+    this.webViewRef = null;
   };
 
   connectWithUrl = (connectUrl: string, options: any) => {
@@ -75,11 +75,11 @@ class FinicityConnect extends Component {
   };
 
   postMessage(eventData: any) {
-    (this.state.webView as any).postMessage(JSON.stringify(eventData));
+    (this.webViewRef as any).postMessage(JSON.stringify(eventData));
   }
 
   pingConnect = () => {
-    if (this.state.webView != null) {
+    if (this.webViewRef != null) {
       // console.log("sending ping event");
       this.postMessage({
         type: ConnectEvents.PING,
@@ -93,7 +93,7 @@ class FinicityConnect extends Component {
 
   startPingingConnect = () => {
     if (
-      this.state.webView != null &&
+      this.webViewRef != null &&
       !this.state.pingedConnectSuccessfully &&
       !this.state.pingingConnect &&
       this.state.pingIntervalId == 0
@@ -139,7 +139,7 @@ class FinicityConnect extends Component {
         onRequestClose={this.close}
       >
         <WebView
-          ref={(ref) => (this.setState({ webview: ref }))}
+          ref={(ref) => this.webViewRef = ref}
           source={{ uri: this.state.connectUrl }}
           onMessage={(event) => {
             const eventData = parseEventData(event.nativeEvent.data);
