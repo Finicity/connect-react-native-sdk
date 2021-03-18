@@ -119,13 +119,13 @@ scan:sonarqube:
 publish:
   stage: publish
   only:
-    - master
+    - unpublish
   script:
     - echo -e "registry=http://registry.fini.city:8081/repository/npm-private/\n//registry.fini.city:8081/repository/npm-private/:_authToken=${NPM_AUTH_TOKEN}" > ./.npmrc
     - npm install
     - npm run build
     - echo "Make sure you updated the version in package.json or it will not update private npm"
-    - npm publish --registry=http://registry.fini.city:8081/repository/npm-private/
+    - npm unpublish @finicity/connect-react-native@0.0.1 --registry=http://registry.fini.city:8081/repository/npm-private/
   cache:
     key: ${CI_COMMIT_REF_SLUG}
     paths:
