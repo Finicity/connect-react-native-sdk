@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, useEffect } from 'react';
 import { Modal, Platform } from 'react-native';
 import { WebView } from 'react-native-webview';
 import * as WebBrowser from 'expo-web-browser';
@@ -81,10 +81,13 @@ class FinicityConnect extends Component {
       this.state.pingIntervalId == 0
     ) {
       this.state.pingingConnect = true;
-      (this.state.pingIntervalId as any) = setInterval(
-        this.pingConnect,
-        PING_TIMEOUT
-      );
+      useEffect(() => {
+        (this.state.pingIntervalId as any) = setInterval(
+          this.pingConnect,
+          PING_TIMEOUT
+        );
+      }, []);
+
       // console.log("Start sending pinging event to connect with pingIntervalId=" + this.state.pingIntervalId);
     }
   };
