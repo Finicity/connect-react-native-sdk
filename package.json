@@ -47,7 +47,8 @@
     "source": "src",
     "output": "dist",
     "targets": [
-      "module"
+      "module",
+      "typescript"
     ]
   }
 }
