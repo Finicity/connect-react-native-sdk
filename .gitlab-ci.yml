@@ -1,11 +1,11 @@
 image: node:14-alpine
 
 variables:
-    DEPLOY_IMAGE: "$CI_REGISTRY_IMAGE:$CI_PIPELINE_ID"
-    SCAN_IMAGE: "$CI_REGISTRY_IMAGE:$CI_PIPELINE_ID-scan"
-    SONAR_PROJECT_KEY: connect-react-native
-    SONAR_TOKEN: $SONAR_LOGIN
-    SONAR_URL: $SONAR_HOST_URL
+  DEPLOY_IMAGE: "$CI_REGISTRY_IMAGE:$CI_PIPELINE_ID"
+  SCAN_IMAGE: "$CI_REGISTRY_IMAGE:$CI_PIPELINE_ID-scan"
+  SONAR_PROJECT_KEY: connect-react-native
+  SONAR_TOKEN: $SONAR_LOGIN
+  SONAR_URL: $SONAR_HOST_URL
 
 stages:
   - install
@@ -66,7 +66,7 @@ build:
 #   script:
 #     - npm run test:coverage
 #   artifacts:
-#     when: always  
+#     when: always
 #     paths:
 #       - coverage
 #     expire_in: 1 days
@@ -75,6 +75,16 @@ build:
 #   stage: test
 #   script:
 #     - npm run test:version_bump
+
+prettier:
+  stage: test
+  cache:
+    key: ${CI_COMMIT_REF_SLUG}
+    paths:
+      - node_modules/
+    policy: pull # https://docs.gitlab.com/ee/ci/yaml/#cachepolicy
+  script:
+    - npm run prettier-check
 
 checkmarx:manual:
   stage: scan
@@ -111,10 +121,10 @@ scan:sonarqube:
     SONAR_ANALYSIS_MODE: publish
   except:
     variables:
-    - $CI_COMMIT_MESSAGE =~ /^WIP.*/
+      - $CI_COMMIT_MESSAGE =~ /^WIP.*/
   script:
     - gitlab-sonar-scanner
-  allow_failure: true 
+  allow_failure: true
 
 publish:
   stage: publish

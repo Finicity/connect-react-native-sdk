@@ -4,7 +4,12 @@ import { WebView } from 'react-native-webview';
 import * as WebBrowser from 'expo-web-browser';
 import Constants from 'expo-constants';
 import { Options } from './interfaces';
-import { ConnectEvents, CONNECT_SDK_VERSION, SDK_PLATFORM, PING_TIMEOUT } from './constants';
+import {
+  ConnectEvents,
+  CONNECT_SDK_VERSION,
+  SDK_PLATFORM,
+  PING_TIMEOUT,
+} from './constants';
 
 const defaultOptions: Options = {
   loaded: (event: any) => {},
@@ -12,7 +17,7 @@ const defaultOptions: Options = {
   cancel: (event: any) => {},
   error: (event: any) => {},
   user: (event: any) => {},
-  route: (event: any) => {}
+  route: (event: any) => {},
 };
 
 class FinicityConnect extends Component {
@@ -24,16 +29,16 @@ class FinicityConnect extends Component {
     pingedConnectSuccessfully: false,
     pingIntervalId: 0,
     options: defaultOptions,
-    browserDisplayed: false
+    browserDisplayed: false,
   };
-  
+
   constructor(props: any) {
     super(props);
   }
 
   resetState = () => {
     this.setState({ show: false });
-    this.setState({browserDisplayed: false});
+    this.setState({ browserDisplayed: false });
     this.setState({ pingingConnect: false });
     this.setState({ pingedConnectSuccessfully: false });
     this.setState({ pingIntervalId: 0 });
@@ -76,7 +81,10 @@ class FinicityConnect extends Component {
       this.state.pingIntervalId == 0
     ) {
       this.state.pingingConnect = true;
-      (this.state.pingIntervalId as any) = setInterval(this.pingConnect, PING_TIMEOUT);
+      (this.state.pingIntervalId as any) = setInterval(
+        this.pingConnect,
+        PING_TIMEOUT
+      );
       // console.log("Start sending pinging event to connect with pingIntervalId=" + this.state.pingIntervalId);
     }
   };
@@ -118,16 +126,22 @@ class FinicityConnect extends Component {
         onRequestClose={this.close}
       >
         <WebView
-          ref={(ref) => this.webViewRef = ref}
+          ref={(ref) => (this.webViewRef = ref)}
           source={{ uri: this.state.connectUrl }}
           onMessage={(event) => {
             const eventData = parseEventData(event.nativeEvent.data);
             const eventType = eventData.type;
             // console.log("CONNECT EVT-TYPE: " + eventType);
-            if (eventType === ConnectEvents.URL && !this.state.browserDisplayed) {
+            if (
+              eventType === ConnectEvents.URL &&
+              !this.state.browserDisplayed
+            ) {
               const url = eventData.url;
               this.openBrowser(url);
-            } else if (eventType === ConnectEvents.CLOSE_POPUP && this.state.browserDisplayed) {
+            } else if (
+              eventType === ConnectEvents.CLOSE_POPUP &&
+              this.state.browserDisplayed
+            ) {
               this.dismissBrowser();
             } else if (eventType === ConnectEvents.ACK) {
               this.state.pingedConnectSuccessfully = true;
