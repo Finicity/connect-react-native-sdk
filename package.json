@@ -1,18 +1,16 @@
 {
   "name": "@finicity/connect-react-native",
   "version": "0.0.1-alpha.3",
-  "description": "Finicity Connect SDK for ReactNative using Expo",
+  "description": "Finicity Connect SDK for ReactNative",
   "main": "dist/module/index.js",
   "keywords": [
     "finicity",
     "finicity connect"
   ],
   "scripts": {
-    "start": "expo start",
-    "android": "expo start --android",
-    "ios": "expo start --ios",
-    "web": "expo start --web",
-    "eject": "expo eject",
+    "android": "react-native run-android",
+    "ios": "react-native run-ios",
+    "start": "react-native start",
     "build": "bob build",
     "prettier-check": "prettier --check .",
     "test:version_bump": "test $npm_package_version != $(npm show $npm_package_name version) || (echo 'Failing... You must bump package.json and package-lock.json' && exit 1)",
@@ -31,14 +29,13 @@
     }
   },
   "dependencies": {
-    "expo": "~40.0.0",
-    "expo-status-bar": "~1.0.3",
-    "expo-web-browser": "~8.6.0",
     "husky": "^5.1.3",
+    "install": "^0.13.0",
     "prettier": "^2.2.1",
     "react": "16.13.1",
     "react-dom": "16.13.1",
     "react-native": "^0.63.2",
+    "react-native-inappbrowser-reborn": "^3.5.1",
     "react-native-web": "~0.13.12",
     "react-native-webview": "^11.2.4"
   },

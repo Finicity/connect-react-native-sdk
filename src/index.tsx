@@ -1,9 +1,8 @@
-import React, { Component, useEffect } from 'react';
+import React, { Component } from 'react';
 import { Modal, Platform } from 'react-native';
 import { WebView } from 'react-native-webview';
-import * as WebBrowser from 'expo-web-browser';
-import Constants from 'expo-constants';
 import { Options } from './interfaces';
+import { InAppBrowser } from 'react-native-inappbrowser-reborn';
 import {
   ConnectEvents,
   CONNECT_SDK_VERSION,
@@ -81,14 +80,11 @@ class FinicityConnect extends Component {
       this.state.pingIntervalId == 0
     ) {
       this.state.pingingConnect = true;
-      useEffect(() => {
-        (this.state.pingIntervalId as any) = setInterval(
-          this.pingConnect,
-          PING_TIMEOUT
-        );
-      }, []);
-
-      // console.log("Start sending pinging event to connect with pingIntervalId=" + this.state.pingIntervalId);
+      this.pingConnect();
+      // (this.state.pingIntervalId as any) = setInterval(
+      //   this.pingConnect,
+      //   PING_TIMEOUT
+      // ); // FIX
     }
   };
 
@@ -105,16 +101,19 @@ class FinicityConnect extends Component {
     this.postMessage({ type: 'window', closed: true });
     if (Platform.OS === 'ios' && this.state.browserDisplayed) {
       this.state.browserDisplayed = false;
-      WebBrowser.dismissBrowser();
+      InAppBrowser.closeAuth();
     }
     // TODO: dismiss browser through deep linking (requires changes on the backend)
   };
 
   openBrowser = async (url: string) => {
-    // NOTE: using openBrowserAsync is inconsistent between iOS and Android
     this.state.browserDisplayed = true;
-    await WebBrowser.openAuthSessionAsync(url, Constants.linkingUri);
-    this.dismissBrowser();
+    if (await InAppBrowser.isAvailable()) {
+      await InAppBrowser.openAuth(url, 'deepLink'); // TODO: define deeplink
+      this.dismissBrowser();
+    } else {
+      // TODO: find a way to handle this? maybe just show an alert?
+    }
   };
 
   render() {
