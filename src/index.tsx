@@ -22,7 +22,6 @@ const defaultOptions: Options = {
 class FinicityConnect extends Component {
   webViewRef: WebView | null = null;
   state = {
-    show: false,
     connectUrl: '',
     pingingConnect: false,
     pingedConnectSuccessfully: false,
@@ -31,12 +30,12 @@ class FinicityConnect extends Component {
     browserDisplayed: false,
   };
 
-  constructor(props: any) {
+  constructor(props: { connectUrl: string; options: Options }) {
     super(props);
+    this.launch(props.connectUrl, props.options);
   }
 
   resetState = () => {
-    this.setState({ show: false });
     this.setState({ browserDisplayed: false });
     this.setState({ pingingConnect: false });
     this.setState({ pingedConnectSuccessfully: false });
@@ -45,10 +44,9 @@ class FinicityConnect extends Component {
     this.webViewRef = null;
   };
 
-  connectWithUrl = (connectUrl: string, options: Options) => {
-    this.setState({ connectUrl: connectUrl });
-    this.setState({ options: { ...defaultOptions, ...options } });
-    this.setState({ show: true });
+  launch = (connectUrl: string, options: Options) => {
+    this.state.connectUrl = connectUrl;
+    this.state.options = { ...defaultOptions, ...options };
   };
 
   close = () => {
@@ -113,14 +111,12 @@ class FinicityConnect extends Component {
   };
 
   render() {
-    let { show } = this.state;
-
     return (
       <Modal
         animationType={'slide'}
         presentationStyle={Platform.OS === 'ios' ? 'pageSheet' : 'fullScreen'}
         transparent={false}
-        visible={show}
+        visible={true}
         onRequestClose={this.close}
       >
         <WebView

@@ -2,8 +2,9 @@
   "name": "@finicity/connect-react-native",
   "version": "0.0.2-alpha.1",
   "description": "Finicity Connect SDK for ReactNative",
-  "main": "dist/module/index.js",
+  "main": "dist/commonjs/index.js",
   "module": "dist/module/index.js",
+  "react-native": "src/index.ts",
   "types": "dist/typescript/index.d.ts",
   "keywords": [
     "finicity",
@@ -51,7 +52,8 @@
     "output": "dist",
     "targets": [
       "module",
-      "typescript"
+      "typescript",
+      "commonjs"
     ]
   }
 }
