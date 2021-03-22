@@ -1,6 +1,6 @@
 {
   "name": "@finicity/connect-react-native",
-  "version": "0.0.2-alpha.0",
+  "version": "0.0.2-alpha.1",
   "description": "Finicity Connect SDK for ReactNative",
   "main": "dist/module/index.js",
   "module": "dist/module/index.js",
