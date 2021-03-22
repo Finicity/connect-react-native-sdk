@@ -94,9 +94,9 @@ class FinicityConnect extends Component {
 
   dismissBrowser = () => {
     this.postMessage({ type: 'window', closed: true });
-    this.state.browserDisplayed = false;
     if (this.state.browserDisplayed) {
       InAppBrowser.closeAuth();
+      this.state.browserDisplayed = false;
     }
   };
 
@@ -116,13 +116,12 @@ class FinicityConnect extends Component {
         animationType={'slide'}
         presentationStyle={Platform.OS === 'ios' ? 'pageSheet' : 'fullScreen'}
         transparent={false}
-        visible={true}
         onRequestClose={this.close}
       >
         <WebView
-          ref={(ref) => (this.webViewRef = ref)}
+          ref={(ref: any) => (this.webViewRef = ref)}
           source={{ uri: this.state.connectUrl }}
-          onMessage={(event) => {
+          onMessage={(event: any) => {
             const eventData = parseEventData(event.nativeEvent.data);
             const eventType = eventData.type;
             if (
