@@ -60,8 +60,7 @@ class FinicityConnect extends Component {
   }
 
   pingConnect = () => {
-    if (this.webViewRef != null) {
-      // console.log("sending ping event");
+    if (this.webViewRef !== null) {
       this.postMessage({
         type: ConnectEvents.PING,
         sdkVersion: CONNECT_SDK_VERSION,
@@ -74,23 +73,21 @@ class FinicityConnect extends Component {
 
   startPingingConnect = () => {
     if (
-      this.webViewRef != null &&
+      this.webViewRef !== null &&
       !this.state.pingedConnectSuccessfully &&
       !this.state.pingingConnect &&
-      this.state.pingIntervalId == 0
+      this.state.pingIntervalId === 0
     ) {
       this.state.pingingConnect = true;
-      this.pingConnect();
-      // (this.state.pingIntervalId as any) = setInterval(
-      //   this.pingConnect,
-      //   PING_TIMEOUT
-      // ); // FIX
+      (this.state.pingIntervalId as any) = setInterval(
+        this.pingConnect,
+        PING_TIMEOUT
+      );
     }
   };
 
   stopPingingConnect = () => {
     if (this.state.pingingConnect && this.state.pingIntervalId != 0) {
-      // console.log("Got ping ack from connect, stop sending ping event for pingIntervalId=" + this.state.pingIntervalId);
       clearInterval(this.state.pingIntervalId);
       this.state.pingingConnect = false;
       this.state.pingIntervalId = 0;
@@ -99,20 +96,19 @@ class FinicityConnect extends Component {
 
   dismissBrowser = () => {
     this.postMessage({ type: 'window', closed: true });
-    if (Platform.OS === 'ios' && this.state.browserDisplayed) {
-      this.state.browserDisplayed = false;
+    this.state.browserDisplayed = false;
+    if (this.state.browserDisplayed) {
       InAppBrowser.closeAuth();
     }
-    // TODO: dismiss browser through deep linking (requires changes on the backend)
   };
 
   openBrowser = async (url: string) => {
     this.state.browserDisplayed = true;
     if (await InAppBrowser.isAvailable()) {
-      await InAppBrowser.openAuth(url, 'deepLink'); // TODO: define deeplink
+      await InAppBrowser.openAuth(url, ''); // TODO: define deeplink
       this.dismissBrowser();
     } else {
-      // TODO: find a way to handle this? maybe just show an alert?
+      // TODO: find a way to handle this, maybe just show an alert?
     }
   };
 
@@ -133,7 +129,6 @@ class FinicityConnect extends Component {
           onMessage={(event) => {
             const eventData = parseEventData(event.nativeEvent.data);
             const eventType = eventData.type;
-            // console.log("CONNECT EVT-TYPE: " + eventType);
             if (
               eventType === ConnectEvents.URL &&
               !this.state.browserDisplayed
