@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Modal, Platform } from 'react-native';
 import { WebView } from 'react-native-webview';
-import { Options } from './interfaces';
+import { ConnectEventHandlers } from './interfaces';
 import { InAppBrowser } from 'react-native-inappbrowser-reborn';
 import {
   ConnectEvents,
@@ -10,7 +10,7 @@ import {
   PING_TIMEOUT,
 } from './constants';
 
-const defaultOptions: Options = {
+export const defaultOptions: ConnectEventHandlers = {
   loaded: (event: any) => {},
   done: (event: any) => {},
   cancel: (event: any) => {},
@@ -19,7 +19,7 @@ const defaultOptions: Options = {
   route: (event: any) => {},
 };
 
-class FinicityConnect extends Component {
+export class FinicityConnect extends Component {
   webViewRef: WebView | null = null;
   state = {
     connectUrl: '',
@@ -28,11 +28,16 @@ class FinicityConnect extends Component {
     pingIntervalId: 0,
     options: defaultOptions,
     browserDisplayed: false,
+    linkingUri: '',
   };
 
-  constructor(props: { connectUrl: string; options: Options }) {
+  constructor(props: {
+    connectUrl: string;
+    options: ConnectEventHandlers;
+    linkingUri: string;
+  }) {
     super(props);
-    this.launch(props.connectUrl, props.options);
+    this.launch(props.connectUrl, props.options, props.linkingUri);
   }
 
   resetState = () => {
@@ -41,12 +46,19 @@ class FinicityConnect extends Component {
     this.setState({ pingedConnectSuccessfully: false });
     this.setState({ pingIntervalId: 0 });
     this.setState({ connectUrl: '' });
+    this.setState({ options: defaultOptions });
+    this.setState({ linkingUri: '' });
     this.webViewRef = null;
   };
 
-  launch = (connectUrl: string, options: Options) => {
+  launch = (
+    connectUrl: string,
+    options: ConnectEventHandlers,
+    linkingUri = ''
+  ) => {
     this.state.connectUrl = connectUrl;
     this.state.options = { ...defaultOptions, ...options };
+    this.state.linkingUri = linkingUri;
   };
 
   close = () => {
@@ -93,10 +105,10 @@ class FinicityConnect extends Component {
   };
 
   dismissBrowser = () => {
-    this.postMessage({ type: 'window', closed: true });
     if (this.state.browserDisplayed) {
-      InAppBrowser.closeAuth();
+      this.postMessage({ type: 'window', closed: true });
       this.state.browserDisplayed = false;
+      InAppBrowser.closeAuth();
     }
   };
 
@@ -163,8 +175,6 @@ class FinicityConnect extends Component {
     );
   }
 }
-
-export default FinicityConnect;
 
 function parseEventData(eventData: any) {
   try {
