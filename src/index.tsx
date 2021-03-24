@@ -9,6 +9,7 @@ import {
   PING_TIMEOUT,
 } from './constants';
 
+console.log('$$$$$');
 export interface ConnectEventHandlers {
   loaded: Function;
   done: Function;
@@ -106,6 +107,7 @@ export class FinicityConnect extends Component {
 
   dismissBrowser = () => {
     if (this.state.browserDisplayed) {
+      console.log('dismissing browser');
       this.postMessage({ type: 'window', closed: true });
       this.state.browserDisplayed = false;
       InAppBrowser.closeAuth();
@@ -113,9 +115,11 @@ export class FinicityConnect extends Component {
   };
 
   openBrowser = async (url: string) => {
+    console.log(this.state);
     this.state.browserDisplayed = true;
     if (await InAppBrowser.isAvailable()) {
-      await InAppBrowser.openAuth(url, ''); // TODO: define deeplink
+      const result = await InAppBrowser.openAuth(url, ''); // TODO: define deeplink
+      console.log(result);
       this.dismissBrowser();
     } else {
       // TODO: find a way to handle this, maybe just show an alert?

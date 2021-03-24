@@ -30,3 +30,5 @@
 Thumbs.db
 kubernetes.yml
 .gitlab-ci.yml
+
+.watchmanconfig
