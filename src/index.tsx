@@ -40,17 +40,6 @@ export class FinicityConnect extends Component {
     this.launch(props.connectUrl, props.options, props.linkingUri);
   }
 
-  resetState = () => {
-    this.setState({ browserDisplayed: false });
-    this.setState({ pingingConnect: false });
-    this.setState({ pingedConnectSuccessfully: false });
-    this.setState({ pingIntervalId: 0 });
-    this.setState({ connectUrl: '' });
-    this.setState({ options: defaultOptions });
-    this.setState({ linkingUri: '' });
-    this.webViewRef = null;
-  };
-
   launch = (
     connectUrl: string,
     options: ConnectEventHandlers,
@@ -62,7 +51,10 @@ export class FinicityConnect extends Component {
   };
 
   close = () => {
-    this.resetState();
+    this.state.options.cancel({
+      code: 100,
+      reason: 'exit',
+    });
   };
 
   postMessage(eventData: any) {
@@ -154,13 +146,10 @@ export class FinicityConnect extends Component {
               this.state.options.loaded(eventData);
             } else if (eventType === ConnectEvents.CANCEL) {
               this.state.options.cancel(eventData);
-              this.close();
             } else if (eventType === ConnectEvents.DONE) {
               this.state.options.done(eventData);
-              this.close();
             } else if (eventType === ConnectEvents.ERROR) {
               this.state.options.error(eventData);
-              this.close();
             } else if (eventType === ConnectEvents.ROUTE) {
               this.state.options.route(eventData);
             } else if (eventType === ConnectEvents.USER) {
