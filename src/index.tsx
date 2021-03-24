@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { Modal, Platform } from 'react-native';
 import { WebView } from 'react-native-webview';
-import { ConnectEventHandlers } from './interfaces';
 import { InAppBrowser } from 'react-native-inappbrowser-reborn';
 import {
   ConnectEvents,
@@ -10,7 +9,16 @@ import {
   PING_TIMEOUT,
 } from './constants';
 
-export const defaultEventHandlers: ConnectEventHandlers = {
+export interface ConnectEventHandlers {
+  loaded: Function;
+  done: Function;
+  cancel: Function;
+  error: Function;
+  user: Function;
+  route: Function;
+}
+
+const defaultEventHandlers: ConnectEventHandlers = {
   loaded: (event: any) => {},
   done: (event: any) => {},
   cancel: (event: any) => {},
