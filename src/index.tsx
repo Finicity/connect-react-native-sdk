@@ -10,7 +10,7 @@ import {
   PING_TIMEOUT,
 } from './constants';
 
-export const defaultOptions: ConnectEventHandlers = {
+export const defaultEventHandlers: ConnectEventHandlers = {
   loaded: (event: any) => {},
   done: (event: any) => {},
   cancel: (event: any) => {},
@@ -26,32 +26,32 @@ export class FinicityConnect extends Component {
     pingingConnect: false,
     pingedConnectSuccessfully: false,
     pingIntervalId: 0,
-    options: defaultOptions,
+    eventHandlers: defaultEventHandlers,
     browserDisplayed: false,
     linkingUri: '',
   };
 
   constructor(props: {
     connectUrl: string;
-    options: ConnectEventHandlers;
+    eventHandlers: ConnectEventHandlers;
     linkingUri: string;
   }) {
     super(props);
-    this.launch(props.connectUrl, props.options, props.linkingUri);
+    this.launch(props.connectUrl, props.eventHandlers, props.linkingUri);
   }
 
   launch = (
     connectUrl: string,
-    options: ConnectEventHandlers,
+    eventHandlers: ConnectEventHandlers,
     linkingUri = ''
   ) => {
     this.state.connectUrl = connectUrl;
-    this.state.options = { ...defaultOptions, ...options };
+    this.state.eventHandlers = { ...defaultEventHandlers, ...eventHandlers };
     this.state.linkingUri = linkingUri;
   };
 
   close = () => {
-    this.state.options.cancel({
+    this.state.eventHandlers.cancel({
       code: 100,
       reason: 'exit',
     });
@@ -143,17 +143,17 @@ export class FinicityConnect extends Component {
               this.state.pingedConnectSuccessfully = true;
               this.stopPingingConnect();
               const eventData = { type: ConnectEvents.LOADED, data: null };
-              this.state.options.loaded(eventData);
+              this.state.eventHandlers.loaded(eventData);
             } else if (eventType === ConnectEvents.CANCEL) {
-              this.state.options.cancel(eventData);
+              this.state.eventHandlers.cancel(eventData);
             } else if (eventType === ConnectEvents.DONE) {
-              this.state.options.done(eventData);
+              this.state.eventHandlers.done(eventData);
             } else if (eventType === ConnectEvents.ERROR) {
-              this.state.options.error(eventData);
+              this.state.eventHandlers.error(eventData);
             } else if (eventType === ConnectEvents.ROUTE) {
-              this.state.options.route(eventData);
+              this.state.eventHandlers.route(eventData);
             } else if (eventType === ConnectEvents.USER) {
-              this.state.options.user(eventData);
+              this.state.eventHandlers.user(eventData);
             }
           }}
           onLoad={() => {
