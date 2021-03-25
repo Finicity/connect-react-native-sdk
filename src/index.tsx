@@ -9,14 +9,13 @@ import {
   PING_TIMEOUT,
 } from './constants';
 
-console.log('$$$$$');
 export interface ConnectEventHandlers {
-  loaded: Function;
+  loaded?: Function;
   done: Function;
   cancel: Function;
   error: Function;
-  user: Function;
-  route: Function;
+  user?: Function;
+  route?: Function;
 }
 
 const defaultEventHandlers: ConnectEventHandlers = {
@@ -109,7 +108,6 @@ export class FinicityConnect extends Component<FinicityConnectProps> {
 
   dismissBrowser = () => {
     if (this.state.browserDisplayed) {
-      console.log('dismissing browser');
       this.postMessage({ type: 'window', closed: true });
       this.state.browserDisplayed = false;
       InAppBrowser.closeAuth();
@@ -117,11 +115,9 @@ export class FinicityConnect extends Component<FinicityConnectProps> {
   };
 
   openBrowser = async (url: string) => {
-    console.log(this.state);
     this.state.browserDisplayed = true;
     if (await InAppBrowser.isAvailable()) {
-      const result = await InAppBrowser.openAuth(url, ''); // TODO: define deeplink
-      console.log(result);
+      await InAppBrowser.openAuth(url, this.state.linkingUri);
       this.dismissBrowser();
     } else {
       // TODO: find a way to handle this, maybe just show an alert?
@@ -157,7 +153,8 @@ export class FinicityConnect extends Component<FinicityConnectProps> {
               this.state.pingedConnectSuccessfully = true;
               this.stopPingingConnect();
               const eventData = { type: ConnectEvents.LOADED, data: null };
-              this.state.eventHandlers.loaded(eventData);
+              this.state.eventHandlers.loaded &&
+                this.state.eventHandlers.loaded(eventData);
             } else if (eventType === ConnectEvents.CANCEL) {
               this.state.eventHandlers.cancel(eventData);
             } else if (eventType === ConnectEvents.DONE) {
@@ -165,9 +162,11 @@ export class FinicityConnect extends Component<FinicityConnectProps> {
             } else if (eventType === ConnectEvents.ERROR) {
               this.state.eventHandlers.error(eventData);
             } else if (eventType === ConnectEvents.ROUTE) {
-              this.state.eventHandlers.route(eventData);
+              this.state.eventHandlers.route &&
+                this.state.eventHandlers.route(eventData);
             } else if (eventType === ConnectEvents.USER) {
-              this.state.eventHandlers.user(eventData);
+              this.state.eventHandlers.user &&
+                this.state.eventHandlers.user(eventData);
             }
           }}
           onLoad={() => {

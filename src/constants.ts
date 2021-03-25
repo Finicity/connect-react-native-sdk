@@ -1,4 +1,4 @@
-export const CONNECT_SDK_VERSION = '1.0.0'; // TODO: find a way to read this from package.json
+export const CONNECT_SDK_VERSION = 'PACKAGE_VERSION';
 export const SDK_PLATFORM = 'reactNative';
 export const PING_TIMEOUT = 1000;
 
