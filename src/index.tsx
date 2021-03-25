@@ -28,7 +28,13 @@ const defaultEventHandlers: ConnectEventHandlers = {
   route: (event: any) => {},
 };
 
-export class FinicityConnect extends Component {
+export interface FinicityConnectProps {
+  connectUrl: string;
+  eventHandlers: ConnectEventHandlers;
+  linkingUri?: string;
+}
+
+export class FinicityConnect extends Component<FinicityConnectProps> {
   webViewRef: WebView | null = null;
   state = {
     connectUrl: '',
@@ -40,11 +46,7 @@ export class FinicityConnect extends Component {
     linkingUri: '',
   };
 
-  constructor(props: {
-    connectUrl: string;
-    eventHandlers: ConnectEventHandlers;
-    linkingUri: string;
-  }) {
+  constructor(props: FinicityConnectProps) {
     super(props);
     this.launch(props.connectUrl, props.eventHandlers, props.linkingUri);
   }
