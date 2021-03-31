@@ -15,7 +15,7 @@
     "ios": "react-native run-ios",
     "start": "react-native start",
     "build": "bob build",
-    "test": "jest",
+    "test": "jest ./src",
     "prettier-check": "prettier --check .",
     "test:version_bump": "test $npm_package_version != $(npm show $npm_package_name version) || (echo 'Failing... You must bump package.json and package-lock.json' && exit 1)",
     "files": [

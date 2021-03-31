@@ -96,7 +96,7 @@ checkmarx:
     - master
   when: on_success
 
-scan:sonarqube:
+sonarqube:
   stage: scan
   image: ciricihq/gitlab-sonar-scanner
   variables:
