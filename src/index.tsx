@@ -53,7 +53,7 @@ export class FinicityConnect extends Component<FinicityConnectProps> {
   launch = (
     connectUrl: string,
     eventHandlers: ConnectEventHandlers,
-    linkingUri: string | ''
+    linkingUri = ''
   ) => {
     this.state.connectUrl = connectUrl;
     this.state.eventHandlers = { ...defaultEventHandlers, ...eventHandlers };
