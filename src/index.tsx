@@ -53,7 +53,7 @@ export class FinicityConnect extends Component<FinicityConnectProps> {
   launch = (
     connectUrl: string,
     eventHandlers: ConnectEventHandlers,
-    linkingUri = ''
+    linkingUri: string | ''
   ) => {
     this.state.connectUrl = connectUrl;
     this.state.eventHandlers = { ...defaultEventHandlers, ...eventHandlers };
@@ -124,6 +124,41 @@ export class FinicityConnect extends Component<FinicityConnectProps> {
     }
   };
 
+  handleEvent = (event: any) => {
+    const eventData = parseEventData(event.nativeEvent.data);
+    const eventType = eventData.type;
+    if (
+      eventType === ConnectEvents.URL &&
+      !this.state.browserDisplayed
+    ) {
+      const url = eventData.url;
+      this.openBrowser(url);
+    } else if (
+      eventType === ConnectEvents.CLOSE_POPUP &&
+      this.state.browserDisplayed
+    ) {
+      this.dismissBrowser();
+    } else if (eventType === ConnectEvents.ACK) {
+      this.state.pingedConnectSuccessfully = true;
+      this.stopPingingConnect();
+      const eventData = { type: ConnectEvents.LOADED, data: null };
+      this.state.eventHandlers.loaded &&
+        this.state.eventHandlers.loaded(eventData);
+    } else if (eventType === ConnectEvents.CANCEL) {
+      this.state.eventHandlers.cancel(eventData);
+    } else if (eventType === ConnectEvents.DONE) {
+      this.state.eventHandlers.done(eventData);
+    } else if (eventType === ConnectEvents.ERROR) {
+      this.state.eventHandlers.error(eventData);
+    } else if (eventType === ConnectEvents.ROUTE) {
+      this.state.eventHandlers.route &&
+        this.state.eventHandlers.route(eventData);
+    } else if (eventType === ConnectEvents.USER) {
+      this.state.eventHandlers.user &&
+        this.state.eventHandlers.user(eventData);
+    }
+  }
+
   render() {
     return (
       <Modal
@@ -135,40 +170,7 @@ export class FinicityConnect extends Component<FinicityConnectProps> {
         <WebView
           ref={(ref: any) => (this.webViewRef = ref)}
           source={{ uri: this.state.connectUrl }}
-          onMessage={(event: any) => {
-            const eventData = parseEventData(event.nativeEvent.data);
-            const eventType = eventData.type;
-            if (
-              eventType === ConnectEvents.URL &&
-              !this.state.browserDisplayed
-            ) {
-              const url = eventData.url;
-              this.openBrowser(url);
-            } else if (
-              eventType === ConnectEvents.CLOSE_POPUP &&
-              this.state.browserDisplayed
-            ) {
-              this.dismissBrowser();
-            } else if (eventType === ConnectEvents.ACK) {
-              this.state.pingedConnectSuccessfully = true;
-              this.stopPingingConnect();
-              const eventData = { type: ConnectEvents.LOADED, data: null };
-              this.state.eventHandlers.loaded &&
-                this.state.eventHandlers.loaded(eventData);
-            } else if (eventType === ConnectEvents.CANCEL) {
-              this.state.eventHandlers.cancel(eventData);
-            } else if (eventType === ConnectEvents.DONE) {
-              this.state.eventHandlers.done(eventData);
-            } else if (eventType === ConnectEvents.ERROR) {
-              this.state.eventHandlers.error(eventData);
-            } else if (eventType === ConnectEvents.ROUTE) {
-              this.state.eventHandlers.route &&
-                this.state.eventHandlers.route(eventData);
-            } else if (eventType === ConnectEvents.USER) {
-              this.state.eventHandlers.user &&
-                this.state.eventHandlers.user(eventData);
-            }
-          }}
+          onMessage={ this.handleEvent.bind(this) }
           onLoad={() => {
             this.startPingingConnect();
           }}
