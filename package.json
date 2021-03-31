@@ -1,5 +1,5 @@
 {
-  "name": "@finicity/connect-react-native",
+  "name": "@finicity/connect-react-native-sdk",
   "version": "0.0.3-alpha.3",
   "description": "Finicity Connect SDK for ReactNative",
   "main": "dist/module/index.js",
@@ -61,13 +61,6 @@
       "module",
       "typescript",
       "commonjs"
-    ]
-  },
-  "jest": {
-    "preset": "react-native",
-    "collectCoverage": true,
-    "coveragePathIgnorePatterns": [
-      "/node_modules/"
     ]
   }
 }

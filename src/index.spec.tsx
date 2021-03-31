@@ -8,12 +8,11 @@ import {
   SDK_PLATFORM,
   PING_TIMEOUT,
 } from './constants';
-import waitForExpect from 'wait-for-expect';
 import { WebViewMessageEvent } from 'react-native-webview';
+import { Platform } from 'react-native';
 
-describe('FinicityConnect component testing', () => {
-
-  let eventHandlerFns: ConnectEventHandlers = {
+describe('FinicityConnect', () => {
+  const eventHandlerFns: ConnectEventHandlers = {
     cancel: (event: any) => {
       console.log('cancel event received', event);
     },
@@ -29,22 +28,102 @@ describe('FinicityConnect component testing', () => {
     route: (event: any) => {
       console.log('route event received', event);
     },
-    user: (event:any ) => {
+    user: (event: any) => {
       console.log('user event received', event);
     },
-  }
+  };
 
-  it('test close', () => {
-    const instanceOf = renderer.create(<FinicityConnect connectUrl="https://finicity.com" eventHandlers={eventHandlerFns} linkingUri='' />).getInstance() as unknown as FinicityConnect;
+  test('close', () => {
+    const instanceOf = (renderer
+      .create(
+        <FinicityConnect
+          connectUrl="https://finicity.com"
+          eventHandlers={eventHandlerFns}
+          linkingUri=""
+        />
+      )
+      .getInstance() as unknown) as FinicityConnect;
     const mockFn = jest.fn();
     instanceOf.state.eventHandlers.cancel = mockFn;
     instanceOf.close();
     expect(mockFn).toHaveBeenCalledTimes(1);
-    expect(mockFn).toHaveBeenLastCalledWith({code: 100, reason: 'exit',})
+    expect(mockFn).toHaveBeenLastCalledWith({ code: 100, reason: 'exit' });
   });
 
-  it('test pingConnect', () => {
-    const instanceOf = renderer.create(<FinicityConnect connectUrl="https://finicity.com" eventHandlers={eventHandlerFns} linkingUri='' />).getInstance() as unknown as FinicityConnect;
+  test('render', () => {
+    // android
+    Platform.OS = 'android';
+    let testRenderer = renderer.create(
+      <FinicityConnect
+        connectUrl="https://finicity.com"
+        eventHandlers={eventHandlerFns}
+        linkingUri=""
+      />
+    );
+    let instanceOf: any = testRenderer.getInstance();
+
+    let mockFn = jest.fn();
+    instanceOf.startPingingConnect = mockFn;
+    let modal = testRenderer.root.findByType('Modal' as React.ElementType);
+    let webview = testRenderer.root.findByType(
+      'RNCWebView' as React.ElementType
+    );
+    webview.props.onLoad();
+    expect(modal.props.presentationStyle).toBe('fullScreen');
+    expect(mockFn).toHaveBeenCalled();
+
+    // ios
+    Platform.OS = 'ios';
+    testRenderer = renderer.create(
+      <FinicityConnect
+        connectUrl="https://finicity.com"
+        eventHandlers={eventHandlerFns}
+        linkingUri=""
+      />
+    );
+
+    instanceOf = testRenderer.getInstance();
+
+    mockFn = jest.fn();
+    instanceOf.startPingingConnect = mockFn;
+    modal = testRenderer.root.findByType('Modal' as React.ElementType);
+    webview = testRenderer.root.findByType('RNCWebView' as React.ElementType);
+    webview.props.onLoad();
+    expect(modal.props.presentationStyle).toBe('pageSheet');
+    expect(mockFn).toHaveBeenCalled();
+  });
+
+  test('postMessage', () => {
+    const instanceOf = (renderer
+      .create(
+        <FinicityConnect
+          connectUrl="https://finicity.com"
+          eventHandlers={eventHandlerFns}
+          linkingUri=""
+        />
+      )
+      .getInstance() as unknown) as FinicityConnect;
+    const mockFn = jest.fn();
+    instanceOf.webViewRef = { postMessage: mockFn } as any;
+    instanceOf.postMessage({ test: true });
+    expect(mockFn).toHaveBeenCalledWith(JSON.stringify({ test: true }));
+
+    // handle null webView
+    instanceOf.webViewRef = null;
+    spyOn(instanceOf, 'postMessage').and.callThrough();
+    expect(instanceOf.postMessage).not.toThrow();
+  });
+
+  test('pingConnect', () => {
+    const instanceOf = (renderer
+      .create(
+        <FinicityConnect
+          connectUrl="https://finicity.com"
+          eventHandlers={eventHandlerFns}
+          linkingUri=""
+        />
+      )
+      .getInstance() as unknown) as FinicityConnect;
     // expect postMessage to be called to inform Connect of SDK
     const mockFn = jest.fn();
     instanceOf.postMessage = mockFn;
@@ -54,7 +133,7 @@ describe('FinicityConnect component testing', () => {
       type: ConnectEvents.PING,
       sdkVersion: CONNECT_SDK_VERSION,
       platform: SDK_PLATFORM,
-    })
+    });
     // expect to call stopPingingConnect if webViewRef = null
     const mockFn2 = jest.fn();
     instanceOf.stopPingingConnect = mockFn2;
@@ -63,16 +142,27 @@ describe('FinicityConnect component testing', () => {
     expect(mockFn2).toHaveBeenCalledTimes(1);
   });
 
-  it('test startPingingConnect/stopPingingConnect', () => {
-    const instanceOf = renderer.create(<FinicityConnect connectUrl="https://finicity.com" eventHandlers={eventHandlerFns} linkingUri='' />).getInstance() as unknown as FinicityConnect;
+  test('startPingingConnect/stopPingingConnect', () => {
+    const instanceOf = (renderer
+      .create(
+        <FinicityConnect
+          connectUrl="https://finicity.com"
+          eventHandlers={eventHandlerFns}
+          linkingUri=""
+        />
+      )
+      .getInstance() as unknown) as FinicityConnect;
     // expect to use set interval timer to post ping message to Connect
     jest.useFakeTimers();
     const mockFn = jest.fn();
     instanceOf.pingConnect = mockFn;
     instanceOf.startPingingConnect();
     expect(setInterval).toHaveBeenCalledTimes(1);
-    expect(setInterval).toHaveBeenLastCalledWith(expect.any(Function), PING_TIMEOUT);
-    jest.advanceTimersByTime(PING_TIMEOUT+1);
+    expect(setInterval).toHaveBeenLastCalledWith(
+      expect.any(Function),
+      PING_TIMEOUT
+    );
+    jest.advanceTimersByTime(PING_TIMEOUT + 1);
     expect(mockFn).toHaveBeenCalledTimes(1);
     // Stop pinging Connect
     expect(instanceOf.state.pingingConnect).toEqual(true);
@@ -85,47 +175,52 @@ describe('FinicityConnect component testing', () => {
     expect(instanceOf.state.pingIntervalId).toEqual(0);
   });
 
-  it('test openBrowser/dismissBrowser', async () => {
-    const instanceOf = renderer.create(<FinicityConnect connectUrl="https://finicity.com" eventHandlers={eventHandlerFns} linkingUri='' />).getInstance() as unknown as FinicityConnect;
+  test('openBrowser/dismissBrowser', async () => {
+    const instanceOf = (renderer
+      .create(
+        <FinicityConnect
+          connectUrl="https://finicity.com"
+          eventHandlers={eventHandlerFns}
+          linkingUri=""
+        />
+      )
+      .getInstance() as unknown) as FinicityConnect;
     const postMessageMockFn = jest.fn();
     instanceOf.postMessage = postMessageMockFn;
     // Setup spies for InAppBrowser calls
-    const spyIsAvailable = jest
+    jest
       .spyOn(InAppBrowser, 'isAvailable')
       .mockReturnValue(Promise.resolve(true));
     const spyOpenAuth = jest
       .spyOn(InAppBrowser, 'openAuth')
-      .mockImplementation(() => Promise.resolve({type: 'cancel'}));
+      .mockImplementation(() => Promise.resolve({ type: 'cancel' }));
     const spyCloseAuth = jest
       .spyOn(InAppBrowser, 'closeAuth')
       .mockImplementation(jest.fn());
+
     // Open Browser, and from above mock cancel
-    instanceOf.openBrowser(instanceOf.state.connectUrl);
-    // Wait for spies/mock to be called before exiting test.
-    expect(spyIsAvailable).toHaveBeenCalledTimes(1);
-    await waitForExpect(() => {
-      expect(spyOpenAuth).toHaveBeenCalledTimes(1);
-    });
-    await waitForExpect(() => {
-      expect(spyCloseAuth).toHaveBeenCalledTimes(1);
-    });
-    await waitForExpect(() => {
-      expect(postMessageMockFn).toHaveBeenCalledTimes(1);
-    });
-    // Restore original InAppBrowser methods
-    spyIsAvailable.mockRestore();
-    spyOpenAuth.mockRestore();
-    spyCloseAuth.mockRestore();
+    await instanceOf.openBrowser(instanceOf.state.connectUrl);
+    expect(spyOpenAuth).toHaveBeenCalledTimes(1);
+    expect(spyCloseAuth).toHaveBeenCalledTimes(1);
+    expect(postMessageMockFn).toHaveBeenCalledTimes(1);
   });
 
-  it('test redirect Url', () => {
-    const instanceOf = renderer.create(<FinicityConnect connectUrl="https://finicity.com" eventHandlers={eventHandlerFns} linkingUri='' />).getInstance() as unknown as FinicityConnect;
-    const urlRedirectStr = "https://redirectUrl.com"
+  test('redirect Url', () => {
+    const instanceOf = (renderer
+      .create(
+        <FinicityConnect
+          connectUrl="https://finicity.com"
+          eventHandlers={eventHandlerFns}
+          linkingUri=""
+        />
+      )
+      .getInstance() as unknown) as FinicityConnect;
+    const urlRedirectStr = 'https://redirectUrl.com';
     // create redirect event
     const event = {
       nativeEvent: {
-        data: ""
-      }
+        data: '',
+      },
     } as WebViewMessageEvent;
     event.nativeEvent.data = JSON.stringify({
       type: ConnectEvents.URL,
@@ -139,16 +234,24 @@ describe('FinicityConnect component testing', () => {
     expect(mockFn).toHaveBeenLastCalledWith(urlRedirectStr);
   });
 
-  it('test close popup', () => {
-    const instanceOf = renderer.create(<FinicityConnect connectUrl="https://finicity.com" eventHandlers={eventHandlerFns} linkingUri='' />).getInstance() as unknown as FinicityConnect;
+  test('close popup', () => {
+    const instanceOf = (renderer
+      .create(
+        <FinicityConnect
+          connectUrl="https://finicity.com"
+          eventHandlers={eventHandlerFns}
+          linkingUri=""
+        />
+      )
+      .getInstance() as unknown) as FinicityConnect;
     // create close popup event
     const event = {
       nativeEvent: {
-        data: ""
-      }
+        data: '',
+      },
     } as WebViewMessageEvent;
     event.nativeEvent.data = JSON.stringify({
-      type: ConnectEvents.CLOSE_POPUP
+      type: ConnectEvents.CLOSE_POPUP,
     });
     // mock dismiss browser to catch call to dismissBrowser, set state to browser displayed.
     const mockFn = jest.fn();
@@ -158,13 +261,21 @@ describe('FinicityConnect component testing', () => {
     expect(mockFn).toHaveBeenCalledTimes(1);
   });
 
-  it('test ack', () => {
-    const instanceOf = renderer.create(<FinicityConnect connectUrl="https://finicity.com" eventHandlers={eventHandlerFns} linkingUri='' />).getInstance() as unknown as FinicityConnect;
+  test('ack', () => {
+    const instanceOf = (renderer
+      .create(
+        <FinicityConnect
+          connectUrl="https://finicity.com"
+          eventHandlers={eventHandlerFns}
+          linkingUri=""
+        />
+      )
+      .getInstance() as unknown) as FinicityConnect;
     // create ack event
     const event = {
       nativeEvent: {
-        data: ""
-      }
+        data: '',
+      },
     } as WebViewMessageEvent;
     event.nativeEvent.data = JSON.stringify({
       type: ConnectEvents.ACK,
@@ -179,20 +290,114 @@ describe('FinicityConnect component testing', () => {
     expect(mockLoadedEventFn).toHaveBeenCalledTimes(1);
   });
 
-  it('test cancel Event', () => {
-    const instanceOf = renderer.create(<FinicityConnect connectUrl="https://finicity.com" eventHandlers={eventHandlerFns} linkingUri='' />).getInstance() as unknown as FinicityConnect;
+  test('launch', () => {
+    const evHandlers = { ...eventHandlerFns };
+    delete evHandlers.loaded;
+    delete evHandlers.route;
+    delete evHandlers.user;
+
+    const instanceOf = (renderer
+      .create(
+        <FinicityConnect
+          connectUrl="https://finicity.com"
+          eventHandlers={evHandlers}
+          linkingUri="testApp"
+        />
+      )
+      .getInstance() as unknown) as FinicityConnect;
+
+    expect(instanceOf.state.connectUrl).toBe('https://finicity.com');
+    expect(instanceOf.state.eventHandlers.loaded).toBeDefined();
+    expect(instanceOf.state.eventHandlers.route).toBeDefined();
+    expect(instanceOf.state.eventHandlers.user).toBeDefined();
+
+    // check for empty linkingUri
+    instanceOf.launch('https://finicity.com', evHandlers, undefined);
+    expect(instanceOf.state.linkingUri).toEqual('');
+  });
+
+  test('parseEventData', () => {
+    const instanceOf = (renderer
+      .create(
+        <FinicityConnect
+          connectUrl="https://finicity.com"
+          eventHandlers={eventHandlerFns}
+          linkingUri=""
+        />
+      )
+      .getInstance() as unknown) as FinicityConnect;
+
+    // invalid JSON event
+    const event: any = {
+      nativeEvent: {
+        data: '{0}',
+      },
+    };
+
+    spyOn(instanceOf, 'handleEvent').and.callThrough();
+    expect(instanceOf.handleEvent.bind(instanceOf, event)).not.toThrow();
+
+    // valid event
+    event.nativeEvent.data = {
+      type: ConnectEvents.CANCEL,
+      data: {
+        code: 100,
+        reason: 'exit',
+      },
+    };
+
+    const mockFn = jest.fn();
+    instanceOf.state.eventHandlers.cancel = mockFn;
+    instanceOf.handleEvent(event);
+    expect(mockFn).toHaveBeenLastCalledWith({
+      type: ConnectEvents.CANCEL,
+      data: {
+        code: 100,
+        reason: 'exit',
+      },
+    });
+
+    // valid JSON event
+    event.nativeEvent.data = JSON.stringify({
+      type: ConnectEvents.CANCEL,
+      data: {
+        code: 100,
+        reason: 'exit',
+      },
+    });
+
+    instanceOf.handleEvent(event);
+    expect(mockFn).toHaveBeenLastCalledWith({
+      type: ConnectEvents.CANCEL,
+      data: {
+        code: 100,
+        reason: 'exit',
+      },
+    });
+  });
+
+  test('cancel Event', () => {
+    const instanceOf = (renderer
+      .create(
+        <FinicityConnect
+          connectUrl="https://finicity.com"
+          eventHandlers={eventHandlerFns}
+          linkingUri=""
+        />
+      )
+      .getInstance() as unknown) as FinicityConnect;
     // create cancel event
     const event = {
       nativeEvent: {
-        data: ""
-      }
+        data: '',
+      },
     } as WebViewMessageEvent;
     event.nativeEvent.data = JSON.stringify({
       type: ConnectEvents.CANCEL,
       data: {
         code: 100,
-        reason: "exit",
-      }
+        reason: 'exit',
+      },
     });
     // mock cancel event callback
     const mockFn = jest.fn();
@@ -203,24 +408,33 @@ describe('FinicityConnect component testing', () => {
       type: ConnectEvents.CANCEL,
       data: {
         code: 100,
-        reason: "exit",
-      }});
+        reason: 'exit',
+      },
+    });
   });
 
-  it('test done Event', () => {
-    const instanceOf = renderer.create(<FinicityConnect connectUrl="https://finicity.com" eventHandlers={eventHandlerFns} linkingUri='' />).getInstance() as unknown as FinicityConnect;
+  test('done Event', () => {
+    const instanceOf = (renderer
+      .create(
+        <FinicityConnect
+          connectUrl="https://finicity.com"
+          eventHandlers={eventHandlerFns}
+          linkingUri=""
+        />
+      )
+      .getInstance() as unknown) as FinicityConnect;
     // create done event
     const event = {
       nativeEvent: {
-        data: ""
-      }
+        data: '',
+      },
     } as WebViewMessageEvent;
     event.nativeEvent.data = JSON.stringify({
       type: ConnectEvents.DONE,
       data: {
         code: 200,
-        reason: "complete"
-      }
+        reason: 'complete',
+      },
     });
     // mock done event callback
     const mockFn = jest.fn();
@@ -231,25 +445,33 @@ describe('FinicityConnect component testing', () => {
       type: ConnectEvents.DONE,
       data: {
         code: 200,
-        reason: "complete",
-      }
+        reason: 'complete',
+      },
     });
   });
 
-  it('test error Event', () => {
-    const instanceOf = renderer.create(<FinicityConnect connectUrl="https://finicity.com" eventHandlers={eventHandlerFns} linkingUri='' />).getInstance() as unknown as FinicityConnect;
+  test('error Event', () => {
+    const instanceOf = (renderer
+      .create(
+        <FinicityConnect
+          connectUrl="https://finicity.com"
+          eventHandlers={eventHandlerFns}
+          linkingUri=""
+        />
+      )
+      .getInstance() as unknown) as FinicityConnect;
     // create error event
     const event = {
       nativeEvent: {
-        data: ""
-      }
+        data: '',
+      },
     } as WebViewMessageEvent;
     event.nativeEvent.data = JSON.stringify({
       type: ConnectEvents.ERROR,
       data: {
         code: 500,
-        reason: "error"
-      }
+        reason: 'error',
+      },
     });
     // mock error event callback
     const mockFn = jest.fn();
@@ -260,25 +482,33 @@ describe('FinicityConnect component testing', () => {
       type: ConnectEvents.ERROR,
       data: {
         code: 500,
-        reason: "error"
-      }
+        reason: 'error',
+      },
     });
   });
 
-  it('test route Event', () => {
-    const instanceOf = renderer.create(<FinicityConnect connectUrl="https://finicity.com" eventHandlers={eventHandlerFns} linkingUri='' />).getInstance() as unknown as FinicityConnect;
+  test('route Event', () => {
+    const instanceOf = (renderer
+      .create(
+        <FinicityConnect
+          connectUrl="https://finicity.com"
+          eventHandlers={eventHandlerFns}
+          linkingUri=""
+        />
+      )
+      .getInstance() as unknown) as FinicityConnect;
     // create route event
     const event = {
       nativeEvent: {
-        data: ""
-      }
+        data: '',
+      },
     } as WebViewMessageEvent;
     event.nativeEvent.data = JSON.stringify({
       type: ConnectEvents.ROUTE,
-      "data": {
-        "params": {},
-        "screen": "search"
-      }
+      data: {
+        params: {},
+        screen: 'search',
+      },
     });
     // mock route event callback
     const mockFn = jest.fn();
@@ -287,33 +517,42 @@ describe('FinicityConnect component testing', () => {
     expect(mockFn).toHaveBeenCalledTimes(1);
     expect(mockFn).toHaveBeenLastCalledWith({
       type: ConnectEvents.ROUTE,
-      "data": {
-        "params": {},
-        "screen": "search"
-      }
+      data: {
+        params: {},
+        screen: 'search',
+      },
     });
   });
 
-  it('test user Event', () => {
-    const instanceOf = renderer.create(<FinicityConnect connectUrl="https://finicity.com" eventHandlers={eventHandlerFns} linkingUri='' />).getInstance() as unknown as FinicityConnect;
+  test('user Event', () => {
+    const instanceOf = (renderer
+      .create(
+        <FinicityConnect
+          connectUrl="https://finicity.com"
+          eventHandlers={eventHandlerFns}
+          linkingUri=""
+        />
+      )
+      .getInstance() as unknown) as FinicityConnect;
     // create user event
     const event = {
       nativeEvent: {
-        data: ""
-      }
+        data: '',
+      },
     } as WebViewMessageEvent;
     event.nativeEvent.data = JSON.stringify({
       type: ConnectEvents.USER,
-      "data": {
-        "action": "Initialize",
-        "customerId": "5003205004",
-        "experience": null,
-        "partnerId": "2445582695152",
-        "sessionId": "c004a06ffc4cccd485df796fba74f1a4b647ab4fee3e691b227db2d6b2c5d9e3",
-        "timestamp": "1617009241542",
-        "ttl": "1617016441542",
-        "type": "default"
-      }
+      data: {
+        action: 'Initialize',
+        customerId: '5003205004',
+        experience: null,
+        partnerId: '2445582695152',
+        sessionId:
+          'c004a06ffc4cccd485df796fba74f1a4b647ab4fee3e691b227db2d6b2c5d9e3',
+        timestamp: '1617009241542',
+        ttl: '1617016441542',
+        type: 'default',
+      },
     });
     // mock user event callback
     const mockFn = jest.fn();
@@ -322,17 +561,17 @@ describe('FinicityConnect component testing', () => {
     expect(mockFn).toHaveBeenCalledTimes(1);
     expect(mockFn).toHaveBeenLastCalledWith({
       type: ConnectEvents.USER,
-      "data": {
-        "action": "Initialize",
-        "customerId": "5003205004",
-        "experience": null,
-        "partnerId": "2445582695152",
-        "sessionId": "c004a06ffc4cccd485df796fba74f1a4b647ab4fee3e691b227db2d6b2c5d9e3",
-        "timestamp": "1617009241542",
-        "ttl": "1617016441542",
-        "type": "default"
-      }
+      data: {
+        action: 'Initialize',
+        customerId: '5003205004',
+        experience: null,
+        partnerId: '2445582695152',
+        sessionId:
+          'c004a06ffc4cccd485df796fba74f1a4b647ab4fee3e691b227db2d6b2c5d9e3',
+        timestamp: '1617009241542',
+        ttl: '1617016441542',
+        type: 'default',
+      },
     });
   });
-
 });

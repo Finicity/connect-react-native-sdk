@@ -18,11 +18,8 @@ export interface ConnectEventHandlers {
   route?: Function;
 }
 
-const defaultEventHandlers: ConnectEventHandlers = {
+const defaultEventHandlers: any = {
   loaded: (event: any) => {},
-  done: (event: any) => {},
-  cancel: (event: any) => {},
-  error: (event: any) => {},
   user: (event: any) => {},
   route: (event: any) => {},
 };
@@ -119,18 +116,14 @@ export class FinicityConnect extends Component<FinicityConnectProps> {
     if (await InAppBrowser.isAvailable()) {
       await InAppBrowser.openAuth(url, this.state.linkingUri);
       this.dismissBrowser();
-    } else {
-      // TODO: find a way to handle this, maybe just show an alert?
     }
+    // TODO: find a way to handle this, maybe just show an alert?
   };
 
   handleEvent = (event: any) => {
     const eventData = parseEventData(event.nativeEvent.data);
     const eventType = eventData.type;
-    if (
-      eventType === ConnectEvents.URL &&
-      !this.state.browserDisplayed
-    ) {
+    if (eventType === ConnectEvents.URL && !this.state.browserDisplayed) {
       const url = eventData.url;
       this.openBrowser(url);
     } else if (
@@ -154,10 +147,9 @@ export class FinicityConnect extends Component<FinicityConnectProps> {
       this.state.eventHandlers.route &&
         this.state.eventHandlers.route(eventData);
     } else if (eventType === ConnectEvents.USER) {
-      this.state.eventHandlers.user &&
-        this.state.eventHandlers.user(eventData);
+      this.state.eventHandlers.user && this.state.eventHandlers.user(eventData);
     }
-  }
+  };
 
   render() {
     return (
@@ -170,7 +162,7 @@ export class FinicityConnect extends Component<FinicityConnectProps> {
         <WebView
           ref={(ref: any) => (this.webViewRef = ref)}
           source={{ uri: this.state.connectUrl }}
-          onMessage={ this.handleEvent.bind(this) }
+          onMessage={this.handleEvent.bind(this)}
           onLoad={() => {
             this.startPingingConnect();
           }}
