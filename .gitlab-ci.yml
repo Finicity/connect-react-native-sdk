@@ -3,7 +3,7 @@ image: node:14-alpine
 variables:
   DEPLOY_IMAGE: "$CI_REGISTRY_IMAGE:$CI_PIPELINE_ID"
   SCAN_IMAGE: "$CI_REGISTRY_IMAGE:$CI_PIPELINE_ID-scan"
-  SONAR_PROJECT_KEY: connect-react-native
+  SONAR_PROJECT_KEY: connect-react-native-sdk
   SONAR_TOKEN: $SONAR_LOGIN
   SONAR_URL: $SONAR_HOST_URL
 
@@ -38,40 +38,20 @@ build:
     paths:
       - dist/
 
-# test:unit-tests:
-#   stage: test
-#   script:
-#     - npm run test
-#   cache:
-#     key: ${CI_COMMIT_REF_SLUG}
-#     paths:
-#       - node_modules/
-#     policy: pull
-
-# test:lint:
-#   stage: test
-#   script:
-#     - npm run lint
-#   cache:
-#     key: ${CI_COMMIT_REF_SLUG}
-#     paths:
-#       - node_modules/
-#     policy: pull
-
-# test:coverage:
-#   stage: test
-#   cache:
-#     key: ${CI_COMMIT_REF_SLUG}
-#     paths:
-#       - node_modules/
-#     policy: pull
-#   script:
-#     - npm run test:coverage
-#   artifacts:
-#     when: always
-#     paths:
-#       - coverage
-#     expire_in: 1 days
+test:
+  stage: test
+  script:
+    - npm run test
+  cache:
+    key: ${CI_COMMIT_REF_SLUG}
+    paths:
+      - node_modules/
+    policy: pull
+  artifacts:
+    when: always
+    paths:
+      - coverage
+    expire_in: 1 days
 
 # test:version_bump:
 #   stage: test
@@ -116,7 +96,7 @@ checkmarx:
     - master
   when: on_success
 
-scan:sonarqube:
+sonarqube:
   stage: scan
   image: ciricihq/gitlab-sonar-scanner
   variables:
