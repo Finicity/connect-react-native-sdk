@@ -53,10 +53,10 @@ test:
       - coverage
     expire_in: 1 days
 
-test:version_bump:
-  stage: test
-  script:
-    - npm run test:version_bump
+# test:version_bump:
+#   stage: test
+#   script:
+#     - npm run test:version_bump
 
 prettier:
   stage: test
