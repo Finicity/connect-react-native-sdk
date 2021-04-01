@@ -33,11 +33,11 @@
     "install": "^0.13.0",
     "prettier": "^2.2.1",
     "react": "16.13.1",
-    "react-native": "^0.63.2",
-    "react-native-webview": "^11.2.4"
+    "react-native": "^0.63.2"
   },
   "peerDependencies": {
-    "react-native-inappbrowser-reborn": "^3.5.1"
+    "react-native-inappbrowser-reborn": "^3.5.1",
+    "react-native-webview": "^11.2.4"
   },
   "devDependencies": {
     "@babel/core": "~7.9.0",
@@ -49,6 +49,7 @@
     "jest": "^26.6.3",
     "npm-version": "^1.1.0",
     "react-native-inappbrowser-reborn": "^3.5.1",
+    "react-native-webview": "^11.2.4",
     "react-test-renderer": "^17.0.2",
     "typescript": "~4.0.0",
     "wait-for-expect": "^3.0.2",
