@@ -14,3 +14,7 @@ npm-debug.log
 #System Files
 .DS_Store
 Thumbs.db
+
+#pipeline
+.gitlab-ci.yml
+sonar-project.properties

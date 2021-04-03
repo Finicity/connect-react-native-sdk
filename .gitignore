@@ -1,16 +1,19 @@
-node_modules/**/*
-.expo/*
-npm-debug.*
-*.jks
-*.p8
-*.p12
-*.key
-*.mobileprovision
-*.orig.*
-web-build/
+node_modules/
 coverage/
+dist/
 
-# macOS
+# IDEs and editors
+.idea
+.vscode
+.project
+.classpath
+*.launch
+.settings/
+
+# System Files
 .DS_Store
+Thumbs.db
 
-dist/**/*
+# NPM
+npm-debug.*
+

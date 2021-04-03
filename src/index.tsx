@@ -10,18 +10,18 @@ import {
 } from './constants';
 
 export interface ConnectEventHandlers {
-  loaded?: Function;
-  done: Function;
-  cancel: Function;
-  error: Function;
-  user?: Function;
-  route?: Function;
+  onLoad?: Function;
+  onDone: Function;
+  onCancel: Function;
+  onError: Function;
+  onUser?: Function;
+  onRoute?: Function;
 }
 
 const defaultEventHandlers: any = {
-  loaded: (event: any) => {},
-  user: (event: any) => {},
-  route: (event: any) => {},
+  onLoad: (event: any) => {},
+  onUser: (event: any) => {},
+  onRoute: (event: any) => {},
 };
 
 export interface FinicityConnectProps {
@@ -58,7 +58,7 @@ export class FinicityConnect extends Component<FinicityConnectProps> {
   };
 
   close = () => {
-    this.state.eventHandlers.cancel({
+    this.state.eventHandlers.onCancel({
       code: 100,
       reason: 'exit',
     });
@@ -113,11 +113,9 @@ export class FinicityConnect extends Component<FinicityConnectProps> {
 
   openBrowser = async (url: string) => {
     this.state.browserDisplayed = true;
-    if (await InAppBrowser.isAvailable()) {
-      await InAppBrowser.openAuth(url, this.state.linkingUri);
-      this.dismissBrowser();
-    }
-    // TODO: find a way to handle this, maybe just show an alert?
+    await InAppBrowser.isAvailable();
+    await InAppBrowser.openAuth(url, this.state.linkingUri);
+    this.dismissBrowser();
   };
 
   handleEvent = (event: any) => {
@@ -135,19 +133,17 @@ export class FinicityConnect extends Component<FinicityConnectProps> {
       this.state.pingedConnectSuccessfully = true;
       this.stopPingingConnect();
       const eventData = { type: ConnectEvents.LOADED, data: null };
-      this.state.eventHandlers.loaded &&
-        this.state.eventHandlers.loaded(eventData);
+      this.state.eventHandlers.onLoad(eventData);
     } else if (eventType === ConnectEvents.CANCEL) {
-      this.state.eventHandlers.cancel(eventData);
+      this.state.eventHandlers.onCancel(eventData);
     } else if (eventType === ConnectEvents.DONE) {
-      this.state.eventHandlers.done(eventData);
+      this.state.eventHandlers.onDone(eventData);
     } else if (eventType === ConnectEvents.ERROR) {
-      this.state.eventHandlers.error(eventData);
+      this.state.eventHandlers.onError(eventData);
     } else if (eventType === ConnectEvents.ROUTE) {
-      this.state.eventHandlers.route &&
-        this.state.eventHandlers.route(eventData);
+      this.state.eventHandlers.onRoute(eventData);
     } else if (eventType === ConnectEvents.USER) {
-      this.state.eventHandlers.user && this.state.eventHandlers.user(eventData);
+      this.state.eventHandlers.onUser(eventData);
     }
   };
 
@@ -157,15 +153,13 @@ export class FinicityConnect extends Component<FinicityConnectProps> {
         animationType={'slide'}
         presentationStyle={Platform.OS === 'ios' ? 'pageSheet' : 'fullScreen'}
         transparent={false}
-        onRequestClose={this.close}
+        onRequestClose={() => this.close()}
       >
         <WebView
           ref={(ref: any) => (this.webViewRef = ref)}
           source={{ uri: this.state.connectUrl }}
-          onMessage={this.handleEvent.bind(this)}
-          onLoad={() => {
-            this.startPingingConnect();
-          }}
+          onMessage={(event) => this.handleEvent(event)}
+          onLoad={() => this.startPingingConnect()}
         />
       </Modal>
     );

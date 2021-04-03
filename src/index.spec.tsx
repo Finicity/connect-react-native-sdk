@@ -13,22 +13,22 @@ import { Platform } from 'react-native';
 
 describe('FinicityConnect', () => {
   const eventHandlerFns: ConnectEventHandlers = {
-    cancel: (event: any) => {
+    onCancel: (event: any) => {
       console.log('cancel event received', event);
     },
-    done: (event: any) => {
+    onDone: (event: any) => {
       console.log('done event received', event);
     },
-    error: (event: any) => {
+    onError: (event: any) => {
       console.log('error event received', event);
     },
-    loaded: (event: any) => {
+    onLoad: (event: any) => {
       console.log('loaded event received', event);
     },
-    route: (event: any) => {
+    onRoute: (event: any) => {
       console.log('route event received', event);
     },
-    user: (event: any) => {
+    onUser: (event: any) => {
       console.log('user event received', event);
     },
   };
@@ -44,13 +44,14 @@ describe('FinicityConnect', () => {
       )
       .getInstance() as unknown) as FinicityConnect;
     const mockFn = jest.fn();
-    instanceOf.state.eventHandlers.cancel = mockFn;
+    instanceOf.state.eventHandlers.onCancel = mockFn;
     instanceOf.close();
     expect(mockFn).toHaveBeenCalledTimes(1);
     expect(mockFn).toHaveBeenLastCalledWith({ code: 100, reason: 'exit' });
   });
 
   test('render', () => {
+    const mockEvent = { test: true };
     // android
     Platform.OS = 'android';
     let testRenderer = renderer.create(
@@ -62,15 +63,25 @@ describe('FinicityConnect', () => {
     );
     let instanceOf: any = testRenderer.getInstance();
 
-    let mockFn = jest.fn();
-    instanceOf.startPingingConnect = mockFn;
+    let startPingingConnectMockFn = jest.fn();
+    let closeMockFn = jest.fn();
+    let handleEventMockFn = jest.fn();
+    instanceOf.startPingingConnect = startPingingConnectMockFn;
+    instanceOf.close = closeMockFn;
+    instanceOf.handleEvent = handleEventMockFn;
     let modal = testRenderer.root.findByType('Modal' as React.ElementType);
     let webview = testRenderer.root.findByType(
       'RNCWebView' as React.ElementType
     );
     webview.props.onLoad();
     expect(modal.props.presentationStyle).toBe('fullScreen');
-    expect(mockFn).toHaveBeenCalled();
+    expect(startPingingConnectMockFn).toHaveBeenCalled();
+
+    webview.props.onMessage(mockEvent);
+    expect(handleEventMockFn).toHaveBeenCalledWith(mockEvent);
+
+    modal.props.onRequestClose();
+    expect(closeMockFn).toHaveBeenCalled();
 
     // ios
     Platform.OS = 'ios';
@@ -84,13 +95,23 @@ describe('FinicityConnect', () => {
 
     instanceOf = testRenderer.getInstance();
 
-    mockFn = jest.fn();
-    instanceOf.startPingingConnect = mockFn;
+    startPingingConnectMockFn = jest.fn();
+    closeMockFn = jest.fn();
+    handleEventMockFn = jest.fn();
+    instanceOf.startPingingConnect = startPingingConnectMockFn;
+    instanceOf.close = closeMockFn;
+    instanceOf.handleEvent = handleEventMockFn;
     modal = testRenderer.root.findByType('Modal' as React.ElementType);
     webview = testRenderer.root.findByType('RNCWebView' as React.ElementType);
     webview.props.onLoad();
     expect(modal.props.presentationStyle).toBe('pageSheet');
-    expect(mockFn).toHaveBeenCalled();
+    expect(startPingingConnectMockFn).toHaveBeenCalled();
+
+    webview.props.onMessage(mockEvent);
+    expect(handleEventMockFn).toHaveBeenCalledWith(mockEvent);
+    
+    modal.props.onRequestClose();
+    expect(closeMockFn).toHaveBeenCalled();
   });
 
   test('postMessage', () => {
@@ -284,7 +305,7 @@ describe('FinicityConnect', () => {
     const mockStopPingFn = jest.fn();
     instanceOf.stopPingingConnect = mockStopPingFn;
     const mockLoadedEventFn = jest.fn();
-    instanceOf.state.eventHandlers.loaded = mockLoadedEventFn;
+    instanceOf.state.eventHandlers.onLoad = mockLoadedEventFn;
     instanceOf.handleEvent(event);
     expect(mockStopPingFn).toHaveBeenCalledTimes(1);
     expect(mockLoadedEventFn).toHaveBeenCalledTimes(1);
@@ -292,9 +313,9 @@ describe('FinicityConnect', () => {
 
   test('launch', () => {
     const evHandlers = { ...eventHandlerFns };
-    delete evHandlers.loaded;
-    delete evHandlers.route;
-    delete evHandlers.user;
+    delete evHandlers.onLoad;
+    delete evHandlers.onRoute;
+    delete evHandlers.onUser;
 
     const instanceOf = (renderer
       .create(
@@ -307,9 +328,9 @@ describe('FinicityConnect', () => {
       .getInstance() as unknown) as FinicityConnect;
 
     expect(instanceOf.state.connectUrl).toBe('https://finicity.com');
-    expect(instanceOf.state.eventHandlers.loaded).toBeDefined();
-    expect(instanceOf.state.eventHandlers.route).toBeDefined();
-    expect(instanceOf.state.eventHandlers.user).toBeDefined();
+    expect(instanceOf.state.eventHandlers.onLoad).toBeDefined();
+    expect(instanceOf.state.eventHandlers.onRoute).toBeDefined();
+    expect(instanceOf.state.eventHandlers.onUser).toBeDefined();
 
     // check for empty linkingUri
     instanceOf.launch('https://finicity.com', evHandlers, undefined);
@@ -347,7 +368,7 @@ describe('FinicityConnect', () => {
     };
 
     const mockFn = jest.fn();
-    instanceOf.state.eventHandlers.cancel = mockFn;
+    instanceOf.state.eventHandlers.onCancel = mockFn;
     instanceOf.handleEvent(event);
     expect(mockFn).toHaveBeenLastCalledWith({
       type: ConnectEvents.CANCEL,
@@ -401,7 +422,7 @@ describe('FinicityConnect', () => {
     });
     // mock cancel event callback
     const mockFn = jest.fn();
-    instanceOf.state.eventHandlers.cancel = mockFn;
+    instanceOf.state.eventHandlers.onCancel = mockFn;
     instanceOf.handleEvent(event);
     expect(mockFn).toHaveBeenCalledTimes(1);
     expect(mockFn).toHaveBeenLastCalledWith({
@@ -438,7 +459,7 @@ describe('FinicityConnect', () => {
     });
     // mock done event callback
     const mockFn = jest.fn();
-    instanceOf.state.eventHandlers.done = mockFn;
+    instanceOf.state.eventHandlers.onDone = mockFn;
     instanceOf.handleEvent(event);
     expect(mockFn).toHaveBeenCalledTimes(1);
     expect(mockFn).toHaveBeenLastCalledWith({
@@ -475,7 +496,7 @@ describe('FinicityConnect', () => {
     });
     // mock error event callback
     const mockFn = jest.fn();
-    instanceOf.state.eventHandlers.error = mockFn;
+    instanceOf.state.eventHandlers.onError = mockFn;
     instanceOf.handleEvent(event);
     expect(mockFn).toHaveBeenCalledTimes(1);
     expect(mockFn).toHaveBeenLastCalledWith({
@@ -512,7 +533,7 @@ describe('FinicityConnect', () => {
     });
     // mock route event callback
     const mockFn = jest.fn();
-    instanceOf.state.eventHandlers.route = mockFn;
+    instanceOf.state.eventHandlers.onRoute = mockFn;
     instanceOf.handleEvent(event);
     expect(mockFn).toHaveBeenCalledTimes(1);
     expect(mockFn).toHaveBeenLastCalledWith({
@@ -556,7 +577,7 @@ describe('FinicityConnect', () => {
     });
     // mock user event callback
     const mockFn = jest.fn();
-    instanceOf.state.eventHandlers.user = mockFn;
+    instanceOf.state.eventHandlers.onUser = mockFn;
     instanceOf.handleEvent(event);
     expect(mockFn).toHaveBeenCalledTimes(1);
     expect(mockFn).toHaveBeenLastCalledWith({
