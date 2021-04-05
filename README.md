@@ -14,6 +14,7 @@ The SDK has two `peerDependencies`:
 - [react-native-webview@11](https://www.npmjs.com/package/react-native-webview)
 
 **NOTE: make sure to run `pod install` after installing these dependencies**
+
 ### NPM
 
 ```bash
@@ -52,16 +53,16 @@ const MyConnectComponent = () => {
 | Event Type | Description                                                                                                                             |
 | ---------- | --------------------------------------------------------------------------------------------------------------------------------------- |
 | onLoad     | Called when the Connect web page is loaded and ready to display                                                                         |
-| onDone       | Called when the user successfully completes the Connect application                                                                     |
-| onCancel     | Called when the user cancels the Connect application                                                                                    |
-| onError      | Called when an error occurs while the user is using the Connect                                                                         |
-| onRoute      | Called with the user is navigating through the screens of the Connect application                                                       |
-| onUser       | Called when a user performs an action. User events provide visibility into what action a user could take within the Connect application |
+| onDone     | Called when the user successfully completes the Connect application                                                                     |
+| onCancel   | Called when the user cancels the Connect application                                                                                    |
+| onError    | Called when an error occurs while the user is using the Connect                                                                         |
+| onRoute    | Called with the user is navigating through the screens of the Connect application                                                       |
+| onUser     | Called when a user performs an action. User events provide visibility into what action a user could take within the Connect application |
 
 For more detailed information on these events visit: [Connect Event Types](https://docs.finicity.com/connect-2-0-events-types/)
 
-
 ## Version compatibility
-| Version | Compatibility                                                                                                                             |
-| ---------- | --------------------------------------------------------------------------------------------------------------------------------------- |
-| 1.x     | React 16+
+
+| Version | Compatibility |
+| ------- | ------------- |
+| 1.x     | React 16+     |

@@ -109,7 +109,7 @@ describe('FinicityConnect', () => {
 
     webview.props.onMessage(mockEvent);
     expect(handleEventMockFn).toHaveBeenCalledWith(mockEvent);
-    
+
     modal.props.onRequestClose();
     expect(closeMockFn).toHaveBeenCalled();
   });
