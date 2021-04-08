@@ -6,7 +6,7 @@ import { WebView } from 'react-native-webview';
 import { InAppBrowser } from 'react-native-inappbrowser-reborn';
 import { ConnectEvents, CONNECT_SDK_VERSION, SDK_PLATFORM, PING_TIMEOUT } from './constants';
 const defaultEventHandlers = {
-  onLoad: event => {},
+  onLoad: () => {},
   onUser: event => {},
   onRoute: event => {}
 };
@@ -98,11 +98,7 @@ export class FinicityConnect extends Component {
       } else if (eventType === ConnectEvents.ACK) {
         this.state.pingedConnectSuccessfully = true;
         this.stopPingingConnect();
-        const eventData = {
-          type: ConnectEvents.LOADED,
-          data: null
-        };
-        this.state.eventHandlers.onLoad(eventData);
+        this.state.eventHandlers.onLoad();
       } else if (eventType === ConnectEvents.CANCEL) {
         this.state.eventHandlers.onCancel(eventData);
       } else if (eventType === ConnectEvents.DONE) {
@@ -110,9 +106,9 @@ export class FinicityConnect extends Component {
       } else if (eventType === ConnectEvents.ERROR) {
         this.state.eventHandlers.onError(eventData);
       } else if (eventType === ConnectEvents.ROUTE) {
-        this.state.eventHandlers.onRoute(eventData);
+        this.state.eventHandlers.onRoute(eventData.data);
       } else if (eventType === ConnectEvents.USER) {
-        this.state.eventHandlers.onUser(eventData);
+        this.state.eventHandlers.onUser(eventData.data);
       }
     });
 

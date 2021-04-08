@@ -22,7 +22,7 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 const defaultEventHandlers = {
-  onLoad: event => {},
+  onLoad: () => {},
   onUser: event => {},
   onRoute: event => {}
 };
@@ -116,11 +116,7 @@ class FinicityConnect extends _react.Component {
       } else if (eventType === _constants.ConnectEvents.ACK) {
         this.state.pingedConnectSuccessfully = true;
         this.stopPingingConnect();
-        const eventData = {
-          type: _constants.ConnectEvents.LOADED,
-          data: null
-        };
-        this.state.eventHandlers.onLoad(eventData);
+        this.state.eventHandlers.onLoad();
       } else if (eventType === _constants.ConnectEvents.CANCEL) {
         this.state.eventHandlers.onCancel(eventData);
       } else if (eventType === _constants.ConnectEvents.DONE) {
@@ -128,9 +124,9 @@ class FinicityConnect extends _react.Component {
       } else if (eventType === _constants.ConnectEvents.ERROR) {
         this.state.eventHandlers.onError(eventData);
       } else if (eventType === _constants.ConnectEvents.ROUTE) {
-        this.state.eventHandlers.onRoute(eventData);
+        this.state.eventHandlers.onRoute(eventData.data);
       } else if (eventType === _constants.ConnectEvents.USER) {
-        this.state.eventHandlers.onUser(eventData);
+        this.state.eventHandlers.onUser(eventData.data);
       }
     });
 

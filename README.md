@@ -31,12 +31,12 @@ import {
 
 const MyConnectComponent = () => {
   const eventHandlers: ConnectEventHandlers = {
-    onDone: (event: any) => {},
-    onCancel: (event: any) => {},
-    onError: (event: any) => {},
-    onLoad: (event: any) => {},
+    onDone: (event: ConnectDoneEvent) => {},
+    onCancel: (event: ConnectCancelEvent) => {},
+    onError: (event: ConnectErrorEvent) => {},
+    onRoute: (event: ConnectRouteEvent) => {},
     onUser: (event: any) => {},
-    onRoute: (event: any) => {},
+    onLoad: () => {},
   };
   return (
     <FinicityConnect

@@ -10,24 +10,51 @@ import {
 } from './constants';
 
 export interface ConnectEventHandlers {
-  onLoad?: Function;
-  onDone: Function;
-  onCancel: Function;
-  onError: Function;
-  onUser?: Function;
-  onRoute?: Function;
+  onDone: (event: ConnectDoneEvent) => void;
+  onCancel: (event: ConnectCancelEvent) => void;
+  onError: (event: ConnectErrorEvent) => void;
+  onRoute?: (event: ConnectRouteEvent) => void;
+  onUser?: (event: any) => void;
+  onLoad?: () => void;
 }
 
 const defaultEventHandlers: any = {
-  onLoad: (event: any) => {},
+  onLoad: () => {},
   onUser: (event: any) => {},
-  onRoute: (event: any) => {},
+  onRoute: (event: ConnectRouteEvent) => {},
 };
 
 export interface FinicityConnectProps {
   connectUrl: string;
   eventHandlers: ConnectEventHandlers;
   linkingUri?: string;
+}
+
+export interface ConnectCancelEvent {
+  code: number;
+  reason: string;
+}
+
+export interface ConnectErrorEvent {
+  code: number;
+  reason: string;
+}
+
+export interface ConnectDoneEvent {
+  code: number;
+  reason: string;
+  reportData: [
+    {
+      portfolioId: string;
+      type: string;
+      reportId: string;
+    }
+  ];
+}
+
+export interface ConnectRouteEvent {
+  screen: string;
+  params: any;
 }
 
 export class FinicityConnect extends Component<FinicityConnectProps> {
@@ -132,8 +159,7 @@ export class FinicityConnect extends Component<FinicityConnectProps> {
     } else if (eventType === ConnectEvents.ACK) {
       this.state.pingedConnectSuccessfully = true;
       this.stopPingingConnect();
-      const eventData = { type: ConnectEvents.LOADED, data: null };
-      this.state.eventHandlers.onLoad(eventData);
+      this.state.eventHandlers.onLoad();
     } else if (eventType === ConnectEvents.CANCEL) {
       this.state.eventHandlers.onCancel(eventData);
     } else if (eventType === ConnectEvents.DONE) {
@@ -141,9 +167,9 @@ export class FinicityConnect extends Component<FinicityConnectProps> {
     } else if (eventType === ConnectEvents.ERROR) {
       this.state.eventHandlers.onError(eventData);
     } else if (eventType === ConnectEvents.ROUTE) {
-      this.state.eventHandlers.onRoute(eventData);
+      this.state.eventHandlers.onRoute(eventData.data);
     } else if (eventType === ConnectEvents.USER) {
-      this.state.eventHandlers.onUser(eventData);
+      this.state.eventHandlers.onUser(eventData.data);
     }
   };
 
