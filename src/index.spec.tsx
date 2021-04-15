@@ -22,7 +22,7 @@ describe('FinicityConnect', () => {
     onError: (event: any) => {
       console.log('error event received', event);
     },
-    onLoad: (event: any) => {
+    onLoad: () => {
       console.log('loaded event received', event);
     },
     onRoute: (event: any) => {
@@ -537,11 +537,8 @@ describe('FinicityConnect', () => {
     instanceOf.handleEvent(event);
     expect(mockFn).toHaveBeenCalledTimes(1);
     expect(mockFn).toHaveBeenLastCalledWith({
-      type: ConnectEvents.ROUTE,
-      data: {
-        params: {},
-        screen: 'search',
-      },
+      params: {},
+      screen: 'search',
     });
   });
 
@@ -581,18 +578,15 @@ describe('FinicityConnect', () => {
     instanceOf.handleEvent(event);
     expect(mockFn).toHaveBeenCalledTimes(1);
     expect(mockFn).toHaveBeenLastCalledWith({
-      type: ConnectEvents.USER,
-      data: {
-        action: 'Initialize',
-        customerId: '5003205004',
-        experience: null,
-        partnerId: '2445582695152',
-        sessionId:
-          'c004a06ffc4cccd485df796fba74f1a4b647ab4fee3e691b227db2d6b2c5d9e3',
-        timestamp: '1617009241542',
-        ttl: '1617016441542',
-        type: 'default',
-      },
+      action: 'Initialize',
+      customerId: '5003205004',
+      experience: null,
+      partnerId: '2445582695152',
+      sessionId:
+        'c004a06ffc4cccd485df796fba74f1a4b647ab4fee3e691b227db2d6b2c5d9e3',
+      timestamp: '1617009241542',
+      ttl: '1617016441542',
+      type: 'default',
     });
   });
 });

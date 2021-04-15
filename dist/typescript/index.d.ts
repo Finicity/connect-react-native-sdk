@@ -1,17 +1,40 @@
 import { Component } from 'react';
 import { WebView } from 'react-native-webview';
 export interface ConnectEventHandlers {
-    onLoad?: Function;
-    onDone: Function;
-    onCancel: Function;
-    onError: Function;
-    onUser?: Function;
-    onRoute?: Function;
+    onDone: (event: ConnectDoneEvent) => void;
+    onCancel: (event: ConnectCancelEvent) => void;
+    onError: (event: ConnectErrorEvent) => void;
+    onRoute?: (event: ConnectRouteEvent) => void;
+    onUser?: (event: any) => void;
+    onLoad?: () => void;
 }
 export interface FinicityConnectProps {
     connectUrl: string;
     eventHandlers: ConnectEventHandlers;
     linkingUri?: string;
+}
+export interface ConnectCancelEvent {
+    code: number;
+    reason: string;
+}
+export interface ConnectErrorEvent {
+    code: number;
+    reason: string;
+}
+export interface ConnectDoneEvent {
+    code: number;
+    reason: string;
+    reportData: [
+        {
+            portfolioId: string;
+            type: string;
+            reportId: string;
+        }
+    ];
+}
+export interface ConnectRouteEvent {
+    screen: string;
+    params: any;
 }
 export declare class FinicityConnect extends Component<FinicityConnectProps> {
     webViewRef: WebView | null;
