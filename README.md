@@ -42,7 +42,7 @@ const MyConnectComponent = () => {
     <FinicityConnect
       connectUrl={'#GENERATED_CONNECT_URL#'}
       eventHandlers={eventHandlers}
-      linkingUri={'#UNIVERAL_LINK#'}
+      linkingUri={'#UNIVERSAL_LINK#'}
     ></FinicityConnect>
   );
 };
