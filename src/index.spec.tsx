@@ -371,11 +371,8 @@ describe('FinicityConnect', () => {
     instanceOf.state.eventHandlers.onCancel = mockFn;
     instanceOf.handleEvent(event);
     expect(mockFn).toHaveBeenLastCalledWith({
-      type: ConnectEvents.CANCEL,
-      data: {
-        code: 100,
-        reason: 'exit',
-      },
+      code: 100,
+      reason: 'exit',
     });
 
     // valid JSON event
@@ -389,11 +386,8 @@ describe('FinicityConnect', () => {
 
     instanceOf.handleEvent(event);
     expect(mockFn).toHaveBeenLastCalledWith({
-      type: ConnectEvents.CANCEL,
-      data: {
-        code: 100,
-        reason: 'exit',
-      },
+      code: 100,
+      reason: 'exit',
     });
   });
 
@@ -426,11 +420,8 @@ describe('FinicityConnect', () => {
     instanceOf.handleEvent(event);
     expect(mockFn).toHaveBeenCalledTimes(1);
     expect(mockFn).toHaveBeenLastCalledWith({
-      type: ConnectEvents.CANCEL,
-      data: {
-        code: 100,
-        reason: 'exit',
-      },
+      code: 100,
+      reason: 'exit',
     });
   });
 
@@ -463,11 +454,8 @@ describe('FinicityConnect', () => {
     instanceOf.handleEvent(event);
     expect(mockFn).toHaveBeenCalledTimes(1);
     expect(mockFn).toHaveBeenLastCalledWith({
-      type: ConnectEvents.DONE,
-      data: {
-        code: 200,
-        reason: 'complete',
-      },
+      code: 200,
+      reason: 'complete',
     });
   });
 
@@ -500,11 +488,8 @@ describe('FinicityConnect', () => {
     instanceOf.handleEvent(event);
     expect(mockFn).toHaveBeenCalledTimes(1);
     expect(mockFn).toHaveBeenLastCalledWith({
-      type: ConnectEvents.ERROR,
-      data: {
-        code: 500,
-        reason: 'error',
-      },
+      code: 500,
+      reason: 'error',
     });
   });
 

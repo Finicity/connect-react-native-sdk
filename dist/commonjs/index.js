@@ -118,11 +118,11 @@ class FinicityConnect extends _react.Component {
         this.stopPingingConnect();
         this.state.eventHandlers.onLoad();
       } else if (eventType === _constants.ConnectEvents.CANCEL) {
-        this.state.eventHandlers.onCancel(eventData);
+        this.state.eventHandlers.onCancel(eventData.data);
       } else if (eventType === _constants.ConnectEvents.DONE) {
-        this.state.eventHandlers.onDone(eventData);
+        this.state.eventHandlers.onDone(eventData.data);
       } else if (eventType === _constants.ConnectEvents.ERROR) {
-        this.state.eventHandlers.onError(eventData);
+        this.state.eventHandlers.onError(eventData.data);
       } else if (eventType === _constants.ConnectEvents.ROUTE) {
         this.state.eventHandlers.onRoute(eventData.data);
       } else if (eventType === _constants.ConnectEvents.USER) {
