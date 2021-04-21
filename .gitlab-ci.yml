@@ -38,35 +38,35 @@ build:
     paths:
       - dist/
 
-test:
-  stage: test
-  script:
-    - npm run test
-  cache:
-    key: ${CI_COMMIT_REF_SLUG}
-    paths:
-      - node_modules/
-    policy: pull
-  artifacts:
-    when: always
-    paths:
-      - coverage
-    expire_in: 1 days
+# test:
+#   stage: test
+#   script:
+#     - npm run test
+#   cache:
+#     key: ${CI_COMMIT_REF_SLUG}
+#     paths:
+#       - node_modules/
+#     policy: pull
+#   artifacts:
+#     when: always
+#     paths:
+#       - coverage
+#     expire_in: 1 days
 
 # test:version_bump:
 #   stage: test
 #   script:
 #     - npm run test:version_bump
 
-prettier:
-  stage: test
-  cache:
-    key: ${CI_COMMIT_REF_SLUG}
-    paths:
-      - node_modules/
-    policy: pull # https://docs.gitlab.com/ee/ci/yaml/#cachepolicy
-  script:
-    - npm run prettier-check
+# prettier:
+#   stage: test
+#   cache:
+#     key: ${CI_COMMIT_REF_SLUG}
+#     paths:
+#       - node_modules/
+#     policy: pull # https://docs.gitlab.com/ee/ci/yaml/#cachepolicy
+#   script:
+#     - npm run prettier-check
 
 checkmarx:manual:
   stage: scan
@@ -96,29 +96,46 @@ checkmarx:
     - master
   when: on_success
 
-sonarqube:
-  stage: scan
-  image: ciricihq/gitlab-sonar-scanner
-  variables:
-    SONAR_ANALYSIS_MODE: publish
-  except:
-    variables:
-      - $CI_COMMIT_MESSAGE =~ /^WIP.*/
-  script:
-    - gitlab-sonar-scanner
-  allow_failure: true
+# sonarqube:
+#   stage: scan
+#   image: ciricihq/gitlab-sonar-scanner
+#   variables:
+#     SONAR_ANALYSIS_MODE: publish
+#   except:
+#     variables:
+#       - $CI_COMMIT_MESSAGE =~ /^WIP.*/
+#   script:
+#     - gitlab-sonar-scanner
+#   allow_failure: true
+
+# publish:
+#   stage: publish
+#   only:
+#     - master
+#   when: manual
+#   script:
+#     - echo -e "registry=http://registry.fini.city:8081/repository/npm-private/\n//registry.fini.city:8081/repository/npm-private/:_authToken=${NPM_AUTH_TOKEN}" > ./.npmrc
+#     - npm install
+#     - npm run build
+#     - echo "Make sure you updated the version in package.json or it will not update private npm"
+#     - npm publish --registry=http://registry.fini.city:8081/repository/npm-private/
+#   cache:
+#     key: ${CI_COMMIT_REF_SLUG}
+#     paths:
+#       - node_modules/
+#     policy: pull
 
 publish:
   stage: publish
-  only:
-    - master
+  # only:
+  #   - master
   when: manual
   script:
-    - echo -e "registry=http://registry.fini.city:8081/repository/npm-private/\n//registry.fini.city:8081/repository/npm-private/:_authToken=${NPM_AUTH_TOKEN}" > ./.npmrc
+    - echo -e "//registry.npmjs.org/:_authToken=${PUBLIC_NPM_TOKEN}" > ./.npmrc
     - npm install
     - npm run build
     - echo "Make sure you updated the version in package.json or it will not update private npm"
-    - npm publish --registry=http://registry.fini.city:8081/repository/npm-private/
+    - npm publish --access public
   cache:
     key: ${CI_COMMIT_REF_SLUG}
     paths:
