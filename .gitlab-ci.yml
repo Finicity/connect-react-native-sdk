@@ -53,11 +53,6 @@ test:
       - coverage
     expire_in: 1 days
 
-# test:version_bump:
-#   stage: test
-#   script:
-#     - npm run test:version_bump
-
 prettier:
   stage: test
   cache:
@@ -114,11 +109,11 @@ publish:
     - master
   when: manual
   script:
-    - echo -e "registry=http://registry.fini.city:8081/repository/npm-private/\n//registry.fini.city:8081/repository/npm-private/:_authToken=${NPM_AUTH_TOKEN}" > ./.npmrc
+    - echo -e "//registry.npmjs.org/:_authToken=${PUBLIC_NPM_TOKEN}" > ./.npmrc
     - npm install
     - npm run build
     - echo "Make sure you updated the version in package.json or it will not update private npm"
-    - npm publish --registry=http://registry.fini.city:8081/repository/npm-private/
+    - npm publish --access public
   cache:
     key: ${CI_COMMIT_REF_SLUG}
     paths:
