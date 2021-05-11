@@ -1,6 +1,6 @@
 {
   "name": "@finicity/connect-react-native-sdk",
-  "version": "1.0.0-rc.4",
+  "version": "1.0.0-rc.5",
   "description": "Finicity Connect SDK for ReactNative",
   "main": "dist/module/index.js",
   "module": "dist/module/index.js",
@@ -28,11 +28,10 @@
       }
     }
   },
-  "dependencies": {
-    "react": "16.13.1",
-    "react-native": "^0.63.2"
-  },
+  "dependencies": {},
   "peerDependencies": {
+    "react": "16.13.1",
+    "react-native": "^0.63.2",
     "react-native-inappbrowser-reborn": "^3.5.1",
     "react-native-webview": "^11.2.4"
   },
@@ -47,6 +46,8 @@
     "jest": "^26.6.3",
     "npm-version": "^1.1.0",
     "prettier": "^2.2.1",
+    "react": "16.13.1",
+    "react-native": "^0.63.2",
     "react-native-inappbrowser-reborn": "^3.5.1",
     "react-native-webview": "^11.2.4",
     "react-test-renderer": "^17.0.2",
