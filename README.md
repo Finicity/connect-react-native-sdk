@@ -1,8 +1,8 @@
-# Finicity Connect React Native SDK
+# Mastercard Open Banking Connect React Native SDK
 
 ## Overview
 
-Finicity Connect React Native SDK provides an easy way for developers to integrate Finicity Connect into their React Native application.
+Mastercard Open Banking Connect React Native SDK provides an easy way for developers to integrate Mastercard Open Banking Connect into their React Native application.
 
 ## Installing
 
@@ -41,11 +41,11 @@ const MyConnectComponent = () => {
     onLoad: () => {},
   };
   return (
-    <FinicityConnect
+    <MastercardConnect
       connectUrl={'#GENERATED_CONNECT_URL#'}
       eventHandlers={eventHandlers}
       linkingUri={'#UNIVERSAL_LINK#'}
-    ></FinicityConnect>
+    ></MastercardConnect>
   );
 };
 ```
@@ -68,4 +68,3 @@ For more detailed information on these events visit: [Connect Event Types](https
 | Version | Compatibility |
 | ------- | ------------- |
 | 1.x     | React 16+     |
-

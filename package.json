@@ -1,13 +1,13 @@
 {
   "name": "@finicity/connect-react-native-sdk",
   "version": "1.0.0-rc.5",
-  "description": "Finicity Connect SDK for ReactNative",
+  "description": "Mastercard Open Banking Connect SDK for ReactNative",
   "main": "dist/module/index.js",
   "module": "dist/module/index.js",
   "types": "dist/typescript/index.d.ts",
   "keywords": [
-    "finicity",
-    "finicity connect"
+    "Mastercard",
+    "Mastercard Open Banking Connect"
   ],
   "scripts": {
     "dev": "watch 'npm run build' ./src",

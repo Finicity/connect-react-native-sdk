@@ -1,6 +1,6 @@
 import React from 'react';
 import renderer from 'react-test-renderer';
-import { ConnectEventHandlers, FinicityConnect } from './index';
+import { ConnectEventHandlers, MastercardConnect } from './index';
 import InAppBrowser from 'react-native-inappbrowser-reborn';
 import {
   ConnectEvents,
@@ -11,7 +11,7 @@ import {
 import { WebViewMessageEvent } from 'react-native-webview';
 import { Platform } from 'react-native';
 
-describe('FinicityConnect', () => {
+describe('MastercardConnect', () => {
   const eventHandlerFns: ConnectEventHandlers = {
     onCancel: (event: any) => {
       console.log('cancel event received', event);
@@ -36,13 +36,13 @@ describe('FinicityConnect', () => {
   test('close', () => {
     const instanceOf = (renderer
       .create(
-        <FinicityConnect
+        <MastercardConnect
           connectUrl="https://finicity.com"
           eventHandlers={eventHandlerFns}
           linkingUri=""
         />
       )
-      .getInstance() as unknown) as FinicityConnect;
+      .getInstance() as unknown) as MastercardConnect;
     const mockFn = jest.fn();
     instanceOf.state.eventHandlers.onCancel = mockFn;
     instanceOf.close();
@@ -55,7 +55,7 @@ describe('FinicityConnect', () => {
     // android
     Platform.OS = 'android';
     let testRenderer = renderer.create(
-      <FinicityConnect
+      <MastercardConnect
         connectUrl="https://finicity.com"
         eventHandlers={eventHandlerFns}
         linkingUri=""
@@ -86,7 +86,7 @@ describe('FinicityConnect', () => {
     // ios
     Platform.OS = 'ios';
     testRenderer = renderer.create(
-      <FinicityConnect
+      <MastercardConnect
         connectUrl="https://finicity.com"
         eventHandlers={eventHandlerFns}
         linkingUri=""
@@ -117,13 +117,13 @@ describe('FinicityConnect', () => {
   test('postMessage', () => {
     const instanceOf = (renderer
       .create(
-        <FinicityConnect
+        <MastercardConnect
           connectUrl="https://finicity.com"
           eventHandlers={eventHandlerFns}
           linkingUri=""
         />
       )
-      .getInstance() as unknown) as FinicityConnect;
+      .getInstance() as unknown) as MastercardConnect;
     const mockFn = jest.fn();
     instanceOf.webViewRef = { postMessage: mockFn } as any;
     instanceOf.postMessage({ test: true });
@@ -138,13 +138,13 @@ describe('FinicityConnect', () => {
   test('pingConnect', () => {
     const instanceOf = (renderer
       .create(
-        <FinicityConnect
+        <MastercardConnect
           connectUrl="https://finicity.com"
           eventHandlers={eventHandlerFns}
           linkingUri=""
         />
       )
-      .getInstance() as unknown) as FinicityConnect;
+      .getInstance() as unknown) as MastercardConnect;
     // expect postMessage to be called to inform Connect of SDK
     const mockFn = jest.fn();
     instanceOf.postMessage = mockFn;
@@ -166,13 +166,13 @@ describe('FinicityConnect', () => {
   test('startPingingConnect/stopPingingConnect', () => {
     const instanceOf = (renderer
       .create(
-        <FinicityConnect
+        <MastercardConnect
           connectUrl="https://finicity.com"
           eventHandlers={eventHandlerFns}
           linkingUri=""
         />
       )
-      .getInstance() as unknown) as FinicityConnect;
+      .getInstance() as unknown) as MastercardConnect;
     // expect to use set interval timer to post ping message to Connect
     jest.useFakeTimers();
     const mockFn = jest.fn();
@@ -199,13 +199,13 @@ describe('FinicityConnect', () => {
   test('openBrowser/dismissBrowser', async () => {
     const instanceOf = (renderer
       .create(
-        <FinicityConnect
+        <MastercardConnect
           connectUrl="https://finicity.com"
           eventHandlers={eventHandlerFns}
           linkingUri=""
         />
       )
-      .getInstance() as unknown) as FinicityConnect;
+      .getInstance() as unknown) as MastercardConnect;
     const postMessageMockFn = jest.fn();
     instanceOf.postMessage = postMessageMockFn;
     // Setup spies for InAppBrowser calls
@@ -229,13 +229,13 @@ describe('FinicityConnect', () => {
   test('redirect Url', () => {
     const instanceOf = (renderer
       .create(
-        <FinicityConnect
+        <MastercardConnect
           connectUrl="https://finicity.com"
           eventHandlers={eventHandlerFns}
           linkingUri=""
         />
       )
-      .getInstance() as unknown) as FinicityConnect;
+      .getInstance() as unknown) as MastercardConnect;
     const urlRedirectStr = 'https://redirectUrl.com';
     // create redirect event
     const event = {
@@ -258,13 +258,13 @@ describe('FinicityConnect', () => {
   test('close popup', () => {
     const instanceOf = (renderer
       .create(
-        <FinicityConnect
+        <MastercardConnect
           connectUrl="https://finicity.com"
           eventHandlers={eventHandlerFns}
           linkingUri=""
         />
       )
-      .getInstance() as unknown) as FinicityConnect;
+      .getInstance() as unknown) as MastercardConnect;
     // create close popup event
     const event = {
       nativeEvent: {
@@ -285,13 +285,13 @@ describe('FinicityConnect', () => {
   test('ack', () => {
     const instanceOf = (renderer
       .create(
-        <FinicityConnect
+        <MastercardConnect
           connectUrl="https://finicity.com"
           eventHandlers={eventHandlerFns}
           linkingUri=""
         />
       )
-      .getInstance() as unknown) as FinicityConnect;
+      .getInstance() as unknown) as MastercardConnect;
     // create ack event
     const event = {
       nativeEvent: {
@@ -319,13 +319,13 @@ describe('FinicityConnect', () => {
 
     const instanceOf = (renderer
       .create(
-        <FinicityConnect
+        <MastercardConnect
           connectUrl="https://finicity.com"
           eventHandlers={evHandlers}
           linkingUri="testApp"
         />
       )
-      .getInstance() as unknown) as FinicityConnect;
+      .getInstance() as unknown) as MastercardConnect;
 
     expect(instanceOf.state.connectUrl).toBe('https://finicity.com');
     expect(instanceOf.state.eventHandlers.onLoad).toBeDefined();
@@ -340,13 +340,13 @@ describe('FinicityConnect', () => {
   test('parseEventData', () => {
     const instanceOf = (renderer
       .create(
-        <FinicityConnect
+        <MastercardConnect
           connectUrl="https://finicity.com"
           eventHandlers={eventHandlerFns}
           linkingUri=""
         />
       )
-      .getInstance() as unknown) as FinicityConnect;
+      .getInstance() as unknown) as MastercardConnect;
 
     // invalid JSON event
     const event: any = {
@@ -394,13 +394,13 @@ describe('FinicityConnect', () => {
   test('cancel Event', () => {
     const instanceOf = (renderer
       .create(
-        <FinicityConnect
+        <MastercardConnect
           connectUrl="https://finicity.com"
           eventHandlers={eventHandlerFns}
           linkingUri=""
         />
       )
-      .getInstance() as unknown) as FinicityConnect;
+      .getInstance() as unknown) as MastercardConnect;
     // create cancel event
     const event = {
       nativeEvent: {
@@ -428,13 +428,13 @@ describe('FinicityConnect', () => {
   test('done Event', () => {
     const instanceOf = (renderer
       .create(
-        <FinicityConnect
+        <MastercardConnect
           connectUrl="https://finicity.com"
           eventHandlers={eventHandlerFns}
           linkingUri=""
         />
       )
-      .getInstance() as unknown) as FinicityConnect;
+      .getInstance() as unknown) as MastercardConnect;
     // create done event
     const event = {
       nativeEvent: {
@@ -462,13 +462,13 @@ describe('FinicityConnect', () => {
   test('error Event', () => {
     const instanceOf = (renderer
       .create(
-        <FinicityConnect
+        <MastercardConnect
           connectUrl="https://finicity.com"
           eventHandlers={eventHandlerFns}
           linkingUri=""
         />
       )
-      .getInstance() as unknown) as FinicityConnect;
+      .getInstance() as unknown) as MastercardConnect;
     // create error event
     const event = {
       nativeEvent: {
@@ -496,13 +496,13 @@ describe('FinicityConnect', () => {
   test('route Event', () => {
     const instanceOf = (renderer
       .create(
-        <FinicityConnect
+        <MastercardConnect
           connectUrl="https://finicity.com"
           eventHandlers={eventHandlerFns}
           linkingUri=""
         />
       )
-      .getInstance() as unknown) as FinicityConnect;
+      .getInstance() as unknown) as MastercardConnect;
     // create route event
     const event = {
       nativeEvent: {
@@ -530,13 +530,13 @@ describe('FinicityConnect', () => {
   test('user Event', () => {
     const instanceOf = (renderer
       .create(
-        <FinicityConnect
+        <MastercardConnect
           connectUrl="https://finicity.com"
           eventHandlers={eventHandlerFns}
           linkingUri=""
         />
       )
-      .getInstance() as unknown) as FinicityConnect;
+      .getInstance() as unknown) as MastercardConnect;
     // create user event
     const event = {
       nativeEvent: {
