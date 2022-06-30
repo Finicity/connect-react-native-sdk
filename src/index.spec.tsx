@@ -37,7 +37,7 @@ describe('MastercardConnect', () => {
     const instanceOf = (renderer
       .create(
         <MastercardConnect
-          connectUrl="https://mastercard.com"
+          connectUrl="https://b2b.mastercard.com/open-banking-solutions/"
           eventHandlers={eventHandlerFns}
           linkingUri=""
         />
@@ -56,7 +56,7 @@ describe('MastercardConnect', () => {
     Platform.OS = 'android';
     let testRenderer = renderer.create(
       <MastercardConnect
-        connectUrl="https://mastercard.com"
+        connectUrl="https://b2b.mastercard.com/open-banking-solutions/"
         eventHandlers={eventHandlerFns}
         linkingUri=""
       />
@@ -87,7 +87,7 @@ describe('MastercardConnect', () => {
     Platform.OS = 'ios';
     testRenderer = renderer.create(
       <MastercardConnect
-        connectUrl="https://mastercard.com"
+        connectUrl="https://b2b.mastercard.com/open-banking-solutions/"
         eventHandlers={eventHandlerFns}
         linkingUri=""
       />
@@ -118,7 +118,7 @@ describe('MastercardConnect', () => {
     const instanceOf = (renderer
       .create(
         <MastercardConnect
-          connectUrl="https://mastercard.com"
+          connectUrl="https://b2b.mastercard.com/open-banking-solutions/"
           eventHandlers={eventHandlerFns}
           linkingUri=""
         />
@@ -139,7 +139,7 @@ describe('MastercardConnect', () => {
     const instanceOf = (renderer
       .create(
         <MastercardConnect
-          connectUrl="https://mastercard.com"
+          connectUrl="https://b2b.mastercard.com/open-banking-solutions/"
           eventHandlers={eventHandlerFns}
           linkingUri=""
         />
@@ -167,7 +167,7 @@ describe('MastercardConnect', () => {
     const instanceOf = (renderer
       .create(
         <MastercardConnect
-          connectUrl="https://mastercard.com"
+          connectUrl="https://b2b.mastercard.com/open-banking-solutions/"
           eventHandlers={eventHandlerFns}
           linkingUri=""
         />
@@ -200,7 +200,7 @@ describe('MastercardConnect', () => {
     const instanceOf = (renderer
       .create(
         <MastercardConnect
-          connectUrl="https://mastercard.com"
+          connectUrl="https://b2b.mastercard.com/open-banking-solutions/"
           eventHandlers={eventHandlerFns}
           linkingUri=""
         />
@@ -230,7 +230,7 @@ describe('MastercardConnect', () => {
     const instanceOf = (renderer
       .create(
         <MastercardConnect
-          connectUrl="https://mastercard.com"
+          connectUrl="https://b2b.mastercard.com/open-banking-solutions/"
           eventHandlers={eventHandlerFns}
           linkingUri=""
         />
@@ -259,7 +259,7 @@ describe('MastercardConnect', () => {
     const instanceOf = (renderer
       .create(
         <MastercardConnect
-          connectUrl="https://mastercard.com"
+          connectUrl="https://b2b.mastercard.com/open-banking-solutions/"
           eventHandlers={eventHandlerFns}
           linkingUri=""
         />
@@ -286,7 +286,7 @@ describe('MastercardConnect', () => {
     const instanceOf = (renderer
       .create(
         <MastercardConnect
-          connectUrl="https://mastercard.com"
+          connectUrl="https://b2b.mastercard.com/open-banking-solutions/"
           eventHandlers={eventHandlerFns}
           linkingUri=""
         />
@@ -320,20 +320,20 @@ describe('MastercardConnect', () => {
     const instanceOf = (renderer
       .create(
         <MastercardConnect
-          connectUrl="https://mastercard.com"
+          connectUrl="https://b2b.mastercard.com/open-banking-solutions/"
           eventHandlers={evHandlers}
           linkingUri="testApp"
         />
       )
       .getInstance() as unknown) as MastercardConnect;
 
-    expect(instanceOf.state.connectUrl).toBe('https://mastercard.com');
+    expect(instanceOf.state.connectUrl).toBe('https://b2b.mastercard.com/open-banking-solutions/');
     expect(instanceOf.state.eventHandlers.onLoad).toBeDefined();
     expect(instanceOf.state.eventHandlers.onRoute).toBeDefined();
     expect(instanceOf.state.eventHandlers.onUser).toBeDefined();
 
     // check for empty linkingUri
-    instanceOf.launch('https://mastercard.com', evHandlers, undefined);
+    instanceOf.launch('https://b2b.mastercard.com/open-banking-solutions/', evHandlers, undefined);
     expect(instanceOf.state.linkingUri).toEqual('');
   });
 
@@ -341,7 +341,7 @@ describe('MastercardConnect', () => {
     const instanceOf = (renderer
       .create(
         <MastercardConnect
-          connectUrl="https://mastercard.com"
+          connectUrl="https://b2b.mastercard.com/open-banking-solutions/"
           eventHandlers={eventHandlerFns}
           linkingUri=""
         />
@@ -395,7 +395,7 @@ describe('MastercardConnect', () => {
     const instanceOf = (renderer
       .create(
         <MastercardConnect
-          connectUrl="https://mastercard.com"
+          connectUrl="https://b2b.mastercard.com/open-banking-solutions/"
           eventHandlers={eventHandlerFns}
           linkingUri=""
         />
@@ -429,7 +429,7 @@ describe('MastercardConnect', () => {
     const instanceOf = (renderer
       .create(
         <MastercardConnect
-          connectUrl="https://mastercard.com"
+          connectUrl="https://b2b.mastercard.com/open-banking-solutions/"
           eventHandlers={eventHandlerFns}
           linkingUri=""
         />
@@ -463,7 +463,7 @@ describe('MastercardConnect', () => {
     const instanceOf = (renderer
       .create(
         <MastercardConnect
-          connectUrl="https://mastercard.com"
+          connectUrl="https://b2b.mastercard.com/open-banking-solutions/"
           eventHandlers={eventHandlerFns}
           linkingUri=""
         />
@@ -497,7 +497,7 @@ describe('MastercardConnect', () => {
     const instanceOf = (renderer
       .create(
         <MastercardConnect
-          connectUrl="https://mastercard.com"
+          connectUrl="https://b2b.mastercard.com/open-banking-solutions/"
           eventHandlers={eventHandlerFns}
           linkingUri=""
         />
@@ -531,7 +531,7 @@ describe('MastercardConnect', () => {
     const instanceOf = (renderer
       .create(
         <MastercardConnect
-          connectUrl="https://mastercard.com"
+          connectUrl="https://b2b.mastercard.com/open-banking-solutions/"
           eventHandlers={eventHandlerFns}
           linkingUri=""
         />
