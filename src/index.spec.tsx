@@ -11,7 +11,7 @@ import {
 import { WebViewMessageEvent } from 'react-native-webview';
 import { Platform } from 'react-native';
 
-fdescribe('FinicityConnect', () => {
+describe('FinicityConnect', () => {
   const eventHandlerFns: ConnectEventHandlers = {
     onCancel: (event: any) => {
       console.log('cancel event received', event);
