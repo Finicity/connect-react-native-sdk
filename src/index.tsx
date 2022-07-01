@@ -24,7 +24,7 @@ const defaultEventHandlers: any = {
   onRoute: (event: ConnectRouteEvent) => {},
 };
 
-export interface MastercardConnectProps {
+export interface ConnectProps {
   connectUrl: string;
   eventHandlers: ConnectEventHandlers;
   linkingUri?: string;
@@ -57,7 +57,7 @@ export interface ConnectRouteEvent {
   params: any;
 }
 
-export class MastercardConnect extends Component<MastercardConnectProps> {
+export class Connect extends Component<ConnectProps> {
   webViewRef: WebView | null = null;
   state = {
     connectUrl: '',
@@ -69,7 +69,7 @@ export class MastercardConnect extends Component<MastercardConnectProps> {
     linkingUri: '',
   };
 
-  constructor(props: MastercardConnectProps) {
+  constructor(props: ConnectProps) {
     super(props);
     this.launch(props.connectUrl, props.eventHandlers, props.linkingUri);
   }

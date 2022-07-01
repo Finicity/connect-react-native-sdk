@@ -1,6 +1,6 @@
 import React from 'react';
 import renderer from 'react-test-renderer';
-import { ConnectEventHandlers, MastercardConnect } from './index';
+import { ConnectEventHandlers, Connect } from './index';
 import InAppBrowser from 'react-native-inappbrowser-reborn';
 import {
   ConnectEvents,
@@ -11,7 +11,7 @@ import {
 import { WebViewMessageEvent } from 'react-native-webview';
 import { Platform } from 'react-native';
 
-describe('MastercardConnect', () => {
+describe('Connect', () => {
   const eventHandlerFns: ConnectEventHandlers = {
     onCancel: (event: any) => {
       console.log('cancel event received', event);
@@ -36,13 +36,13 @@ describe('MastercardConnect', () => {
   test('close', () => {
     const instanceOf = (renderer
       .create(
-        <MastercardConnect
+        <Connect
           connectUrl="https://b2b.mastercard.com/open-banking-solutions/"
           eventHandlers={eventHandlerFns}
           linkingUri=""
         />
       )
-      .getInstance() as unknown) as MastercardConnect;
+      .getInstance() as unknown) as Connect;
     const mockFn = jest.fn();
     instanceOf.state.eventHandlers.onCancel = mockFn;
     instanceOf.close();
@@ -55,7 +55,7 @@ describe('MastercardConnect', () => {
     // android
     Platform.OS = 'android';
     let testRenderer = renderer.create(
-      <MastercardConnect
+      <Connect
         connectUrl="https://b2b.mastercard.com/open-banking-solutions/"
         eventHandlers={eventHandlerFns}
         linkingUri=""
@@ -86,7 +86,7 @@ describe('MastercardConnect', () => {
     // ios
     Platform.OS = 'ios';
     testRenderer = renderer.create(
-      <MastercardConnect
+      <Connect
         connectUrl="https://b2b.mastercard.com/open-banking-solutions/"
         eventHandlers={eventHandlerFns}
         linkingUri=""
@@ -117,13 +117,13 @@ describe('MastercardConnect', () => {
   test('postMessage', () => {
     const instanceOf = (renderer
       .create(
-        <MastercardConnect
+        <Connect
           connectUrl="https://b2b.mastercard.com/open-banking-solutions/"
           eventHandlers={eventHandlerFns}
           linkingUri=""
         />
       )
-      .getInstance() as unknown) as MastercardConnect;
+      .getInstance() as unknown) as Connect;
     const mockFn = jest.fn();
     instanceOf.webViewRef = { postMessage: mockFn } as any;
     instanceOf.postMessage({ test: true });
@@ -138,13 +138,13 @@ describe('MastercardConnect', () => {
   test('pingConnect', () => {
     const instanceOf = (renderer
       .create(
-        <MastercardConnect
+        <Connect
           connectUrl="https://b2b.mastercard.com/open-banking-solutions/"
           eventHandlers={eventHandlerFns}
           linkingUri=""
         />
       )
-      .getInstance() as unknown) as MastercardConnect;
+      .getInstance() as unknown) as Connect;
     // expect postMessage to be called to inform Connect of SDK
     const mockFn = jest.fn();
     instanceOf.postMessage = mockFn;
@@ -166,13 +166,13 @@ describe('MastercardConnect', () => {
   test('startPingingConnect/stopPingingConnect', () => {
     const instanceOf = (renderer
       .create(
-        <MastercardConnect
+        <Connect
           connectUrl="https://b2b.mastercard.com/open-banking-solutions/"
           eventHandlers={eventHandlerFns}
           linkingUri=""
         />
       )
-      .getInstance() as unknown) as MastercardConnect;
+      .getInstance() as unknown) as Connect;
     // expect to use set interval timer to post ping message to Connect
     jest.useFakeTimers();
     const mockFn = jest.fn();
@@ -199,13 +199,13 @@ describe('MastercardConnect', () => {
   test('openBrowser/dismissBrowser', async () => {
     const instanceOf = (renderer
       .create(
-        <MastercardConnect
+        <Connect
           connectUrl="https://b2b.mastercard.com/open-banking-solutions/"
           eventHandlers={eventHandlerFns}
           linkingUri=""
         />
       )
-      .getInstance() as unknown) as MastercardConnect;
+      .getInstance() as unknown) as Connect;
     const postMessageMockFn = jest.fn();
     instanceOf.postMessage = postMessageMockFn;
     // Setup spies for InAppBrowser calls
@@ -229,13 +229,13 @@ describe('MastercardConnect', () => {
   test('redirect Url', () => {
     const instanceOf = (renderer
       .create(
-        <MastercardConnect
+        <Connect
           connectUrl="https://b2b.mastercard.com/open-banking-solutions/"
           eventHandlers={eventHandlerFns}
           linkingUri=""
         />
       )
-      .getInstance() as unknown) as MastercardConnect;
+      .getInstance() as unknown) as Connect;
     const urlRedirectStr = 'https://redirectUrl.com';
     // create redirect event
     const event = {
@@ -258,13 +258,13 @@ describe('MastercardConnect', () => {
   test('close popup', () => {
     const instanceOf = (renderer
       .create(
-        <MastercardConnect
+        <Connect
           connectUrl="https://b2b.mastercard.com/open-banking-solutions/"
           eventHandlers={eventHandlerFns}
           linkingUri=""
         />
       )
-      .getInstance() as unknown) as MastercardConnect;
+      .getInstance() as unknown) as Connect;
     // create close popup event
     const event = {
       nativeEvent: {
@@ -285,13 +285,13 @@ describe('MastercardConnect', () => {
   test('ack', () => {
     const instanceOf = (renderer
       .create(
-        <MastercardConnect
+        <Connect
           connectUrl="https://b2b.mastercard.com/open-banking-solutions/"
           eventHandlers={eventHandlerFns}
           linkingUri=""
         />
       )
-      .getInstance() as unknown) as MastercardConnect;
+      .getInstance() as unknown) as Connect;
     // create ack event
     const event = {
       nativeEvent: {
@@ -319,13 +319,13 @@ describe('MastercardConnect', () => {
 
     const instanceOf = (renderer
       .create(
-        <MastercardConnect
+        <Connect
           connectUrl="https://b2b.mastercard.com/open-banking-solutions/"
           eventHandlers={evHandlers}
           linkingUri="testApp"
         />
       )
-      .getInstance() as unknown) as MastercardConnect;
+      .getInstance() as unknown) as Connect;
 
     expect(instanceOf.state.connectUrl).toBe(
       'https://b2b.mastercard.com/open-banking-solutions/'
@@ -346,13 +346,13 @@ describe('MastercardConnect', () => {
   test('parseEventData', () => {
     const instanceOf = (renderer
       .create(
-        <MastercardConnect
+        <Connect
           connectUrl="https://b2b.mastercard.com/open-banking-solutions/"
           eventHandlers={eventHandlerFns}
           linkingUri=""
         />
       )
-      .getInstance() as unknown) as MastercardConnect;
+      .getInstance() as unknown) as Connect;
 
     // invalid JSON event
     const event: any = {
@@ -400,13 +400,13 @@ describe('MastercardConnect', () => {
   test('cancel Event', () => {
     const instanceOf = (renderer
       .create(
-        <MastercardConnect
+        <Connect
           connectUrl="https://b2b.mastercard.com/open-banking-solutions/"
           eventHandlers={eventHandlerFns}
           linkingUri=""
         />
       )
-      .getInstance() as unknown) as MastercardConnect;
+      .getInstance() as unknown) as Connect;
     // create cancel event
     const event = {
       nativeEvent: {
@@ -434,13 +434,13 @@ describe('MastercardConnect', () => {
   test('done Event', () => {
     const instanceOf = (renderer
       .create(
-        <MastercardConnect
+        <Connect
           connectUrl="https://b2b.mastercard.com/open-banking-solutions/"
           eventHandlers={eventHandlerFns}
           linkingUri=""
         />
       )
-      .getInstance() as unknown) as MastercardConnect;
+      .getInstance() as unknown) as Connect;
     // create done event
     const event = {
       nativeEvent: {
@@ -468,13 +468,13 @@ describe('MastercardConnect', () => {
   test('error Event', () => {
     const instanceOf = (renderer
       .create(
-        <MastercardConnect
+        <Connect
           connectUrl="https://b2b.mastercard.com/open-banking-solutions/"
           eventHandlers={eventHandlerFns}
           linkingUri=""
         />
       )
-      .getInstance() as unknown) as MastercardConnect;
+      .getInstance() as unknown) as Connect;
     // create error event
     const event = {
       nativeEvent: {
@@ -502,13 +502,13 @@ describe('MastercardConnect', () => {
   test('route Event', () => {
     const instanceOf = (renderer
       .create(
-        <MastercardConnect
+        <Connect
           connectUrl="https://b2b.mastercard.com/open-banking-solutions/"
           eventHandlers={eventHandlerFns}
           linkingUri=""
         />
       )
-      .getInstance() as unknown) as MastercardConnect;
+      .getInstance() as unknown) as Connect;
     // create route event
     const event = {
       nativeEvent: {
@@ -536,13 +536,13 @@ describe('MastercardConnect', () => {
   test('user Event', () => {
     const instanceOf = (renderer
       .create(
-        <MastercardConnect
+        <Connect
           connectUrl="https://b2b.mastercard.com/open-banking-solutions/"
           eventHandlers={eventHandlerFns}
           linkingUri=""
         />
       )
-      .getInstance() as unknown) as MastercardConnect;
+      .getInstance() as unknown) as Connect;
     // create user event
     const event = {
       nativeEvent: {

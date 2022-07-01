@@ -1,5 +1,5 @@
 {
-  "name": "@finicity/connect-react-native-sdk",
+  "name": "@mastercardopenbanking/connect-react-native-sdk",
   "version": "1.0.0-rc.5",
   "description": "Mastercard Open Banking Connect SDK for ReactNative",
   "main": "dist/module/index.js",
