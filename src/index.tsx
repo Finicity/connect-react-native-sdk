@@ -134,14 +134,14 @@ export class FinicityConnect extends Component<FinicityConnectProps> {
     if (this.state.browserDisplayed) {
       this.postMessage({ type: 'window', closed: true });
       this.state.browserDisplayed = false;
-      InAppBrowser.closeAuth();
+      InAppBrowser.close();
     }
   };
 
   openBrowser = async (url: string) => {
     this.state.browserDisplayed = true;
     await InAppBrowser.isAvailable();
-    await InAppBrowser.openAuth(url, this.state.linkingUri);
+    await InAppBrowser.open(url);
     this.dismissBrowser();
   };
 

@@ -212,17 +212,17 @@ describe('FinicityConnect', () => {
     jest
       .spyOn(InAppBrowser, 'isAvailable')
       .mockReturnValue(Promise.resolve(true));
-    const spyOpenAuth = jest
-      .spyOn(InAppBrowser, 'openAuth')
+    const spyOpen = jest
+      .spyOn(InAppBrowser, 'open')
       .mockImplementation(() => Promise.resolve({ type: 'cancel' }));
-    const spyCloseAuth = jest
-      .spyOn(InAppBrowser, 'closeAuth')
+    const spyClose = jest
+      .spyOn(InAppBrowser, 'close')
       .mockImplementation(jest.fn());
 
     // Open Browser, and from above mock cancel
     await instanceOf.openBrowser(instanceOf.state.connectUrl);
-    expect(spyOpenAuth).toHaveBeenCalledTimes(1);
-    expect(spyCloseAuth).toHaveBeenCalledTimes(1);
+    expect(spyOpen).toHaveBeenCalledTimes(1);
+    expect(spyClose).toHaveBeenCalledTimes(1);
     expect(postMessageMockFn).toHaveBeenCalledTimes(1);
   });
 

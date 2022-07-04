@@ -68,4 +68,3 @@ For more detailed information on these events visit: [Connect Event Types](https
 | Version | Compatibility |
 | ------- | ------------- |
 | 1.x     | React 16+     |
-
