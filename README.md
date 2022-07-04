@@ -41,11 +41,11 @@ const MyConnectComponent = () => {
     onLoad: () => {},
   };
   return (
-    <MastercardConnect
+    <Connect
       connectUrl={'#GENERATED_CONNECT_URL#'}
       eventHandlers={eventHandlers}
       linkingUri={'#UNIVERSAL_LINK#'}
-    ></MastercardConnect>
+    ></Connect>
   );
 };
 ```
