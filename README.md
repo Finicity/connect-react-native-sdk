@@ -10,10 +10,10 @@ Mastercard Open Banking Connect React Native SDK provides an easy way for develo
 
 The SDK has the following `peerDependencies`:
 
-- [react-native-inappbrowser-reborn@3](https://www.npmjs.com/package/react-native-inappbrowser-reborn)
-- [react-native-webview@11](https://www.npmjs.com/package/react-native-webview)
-- [react@16](https://www.npmjs.com/package/@finicity/connect-react-native-sdk)
-- [react-native@0.63](https://www.npmjs.com/package/react-native)
+- [react-native-inappbrowser-reborn >=3.6](https://www.npmjs.com/package/react-native-inappbrowser-reborn)
+- [react-native-webview >=11](https://www.npmjs.com/package/react-native-webview)
+- [react >=16.13](https://www.npmjs.com/package/@finicity/connect-react-native-sdk)
+- [react-native >=0.63](https://www.npmjs.com/package/react-native)
 
 **NOTE: make sure to run `pod install` after installing these dependencies**
 

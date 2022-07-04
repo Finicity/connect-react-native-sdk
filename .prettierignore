@@ -25,6 +25,7 @@
 /dist
 /src/assets/workers/*.js
 /src/assets/sdk/
+README.md
 # System Files
 .DS_Store
 Thumbs.db
