@@ -109,7 +109,7 @@ publish:
     - master
   when: manual
   script:
-    - echo -e "//registry.npmjs.org/:_authToken=${PUBLIC_NPM_TOKEN}" > ./.npmrc
+    - echo -e "//registry.npmjs.org/:_authToken=${MASTERCARD_NPMJS_AUTOMATION_TOKEN}" > ./.npmrc
     - echo "Make sure you updated the version in package.json or it will not update private npm"
     - npm publish --access public
   cache:
