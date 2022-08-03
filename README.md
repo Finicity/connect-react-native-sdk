@@ -12,7 +12,7 @@ The SDK has the following `peerDependencies`:
 
 - [react-native-inappbrowser-reborn >=3.6](https://www.npmjs.com/package/react-native-inappbrowser-reborn)
 - [react-native-webview >=11](https://www.npmjs.com/package/react-native-webview)
-- [react >=16.13](https://www.npmjs.com/package/@finicity/connect-react-native-sdk)
+- [react >=16.13](https://www.npmjs.com/package/react)
 - [react-native >=0.63](https://www.npmjs.com/package/react-native)
 
 **NOTE: make sure to run `pod install` after installing these dependencies**
@@ -20,16 +20,16 @@ The SDK has the following `peerDependencies`:
 ### NPM
 
 ```bash
-npm install @finicity/connect-react-native-sdk
+npm install connect-react-native-sdk
 ```
 
 ### Usage
 
 ```tsx
 import {
-  FinicityConnect,
+  Connect,
   ConnectEventHandlers,
-} from '@finicity/connect-react-native-sdk';
+} from 'connect-react-native-sdk';
 
 const MyConnectComponent = () => {
   const eventHandlers: ConnectEventHandlers = {
@@ -60,8 +60,6 @@ const MyConnectComponent = () => {
 | onError    | Called when an error occurs while the user is using the Connect                                                                         |
 | onRoute    | Called with the user is navigating through the screens of the Connect application                                                       |
 | onUser     | Called when a user performs an action. User events provide visibility into what action a user could take within the Connect application |
-
-For more detailed information on these events visit: [Connect Event Types](https://docs.finicity.com/connect-2-0-events-types/)
 
 ## Version compatibility
 
