@@ -1,7 +1,7 @@
 {
-  "name": "@mastercardopenbanking/connect-react-native-sdk",
-  "version": "1.0.0-rc.6",
-  "description": "Mastercard Open Banking Connect SDK for ReactNative",
+  "name": "@finicity/connect-react-native-sdk",
+  "version": "1.0.0-rc.7",
+  "description": "Finicity Connect SDK for ReactNative",
   "main": "dist/module/index.js",
   "module": "dist/module/index.js",
   "types": "dist/typescript/index.d.ts",
@@ -28,7 +28,6 @@
       "pre-push": "ng lint && prettier --check ."
     }
   },
-  "dependencies": {},
   "peerDependencies": {
     "react": ">=16.13",
     "react-native": ">=0.63",
@@ -48,7 +47,7 @@
     "prettier": "^2.2.1",
     "react": "16.13.1",
     "react-native": "^0.63.2",
-    "react-native-inappbrowser-reborn": "^3.5.1",
+    "react-native-inappbrowser-reborn": "^3.7.0",
     "react-native-webview": "^11.2.4",
     "react-test-renderer": "^17.0.2",
     "typescript": "~4.0.0",
