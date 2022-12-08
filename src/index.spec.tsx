@@ -23,7 +23,7 @@ describe('Connect', () => {
       console.log('error event received', event);
     },
     onLoad: () => {
-      console.log('loaded event received', event);
+      console.log('loaded event received');
     },
     onRoute: (event: any) => {
       console.log('route event received', event);
@@ -196,7 +196,30 @@ describe('Connect', () => {
     expect(instanceOf.state.pingIntervalId).toEqual(0);
   });
 
-  test('openBrowser/dismissBrowser', async () => {
+  test('dismissBrowser (no-op)', async () => {
+    const instanceOf = (renderer
+      .create(
+        <Connect
+          connectUrl="https://b2b.mastercard.com/open-banking-solutions/"
+          eventHandlers={eventHandlerFns}
+          linkingUri=""
+        />
+      )
+      .getInstance() as unknown) as Connect;
+    const postMessageMockFn = jest.fn();
+    instanceOf.postMessage = postMessageMockFn;
+
+    const spyClose = jest
+      .spyOn(InAppBrowser, 'close')
+      .mockImplementation(jest.fn());
+
+    instanceOf.state.browserDisplayed = false;
+    await instanceOf.dismissBrowser();
+    expect(spyClose).toHaveBeenCalledTimes(0);
+    expect(postMessageMockFn).toHaveBeenCalledTimes(0);
+  });
+
+  test('openBrowser/dismissBrowser (User cancels)', async () => {
     const instanceOf = (renderer
       .create(
         <Connect
@@ -215,6 +238,36 @@ describe('Connect', () => {
     const spyOpen = jest
       .spyOn(InAppBrowser, 'open')
       .mockImplementation(() => Promise.resolve({ type: 'cancel' }));
+    const spyClose = jest
+      .spyOn(InAppBrowser, 'close')
+      .mockImplementation(jest.fn());
+
+    // Open Browser, and from above mock cancel
+    await instanceOf.openBrowser(instanceOf.state.connectUrl);
+    expect(spyOpen).toHaveBeenCalledTimes(1);
+    expect(spyClose).toHaveBeenCalledTimes(0);
+    expect(postMessageMockFn).toHaveBeenCalledTimes(1);
+  });
+
+  test('openBrowser/dismissBrowser (SDK dismiss)', async () => {
+    const instanceOf = (renderer
+      .create(
+        <Connect
+          connectUrl="https://b2b.mastercard.com/open-banking-solutions/"
+          eventHandlers={eventHandlerFns}
+          linkingUri=""
+        />
+      )
+      .getInstance() as unknown) as Connect;
+    const postMessageMockFn = jest.fn();
+    instanceOf.postMessage = postMessageMockFn;
+    // Setup spies for InAppBrowser calls
+    jest
+      .spyOn(InAppBrowser, 'isAvailable')
+      .mockReturnValue(Promise.resolve(true));
+    const spyOpen = jest
+      .spyOn(InAppBrowser, 'open')
+      .mockImplementation(() => Promise.resolve({ type: 'dismiss' }));
     const spyClose = jest
       .spyOn(InAppBrowser, 'close')
       .mockImplementation(jest.fn());

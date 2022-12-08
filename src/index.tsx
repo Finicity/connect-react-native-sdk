@@ -130,19 +130,19 @@ export class Connect extends Component<ConnectProps> {
     }
   };
 
-  dismissBrowser = () => {
+  dismissBrowser = (type?: string) => {
     if (this.state.browserDisplayed) {
       this.postMessage({ type: 'window', closed: true });
       this.state.browserDisplayed = false;
-      InAppBrowser.close();
+      if (type !== 'cancel') InAppBrowser.close();
     }
   };
 
   openBrowser = async (url: string) => {
     this.state.browserDisplayed = true;
     await InAppBrowser.isAvailable();
-    await InAppBrowser.open(url);
-    this.dismissBrowser();
+    const { type } = await InAppBrowser.open(url);
+    this.dismissBrowser(type);
   };
 
   handleEvent = (event: any) => {
