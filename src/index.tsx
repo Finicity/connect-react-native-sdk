@@ -141,7 +141,10 @@ export class Connect extends Component<ConnectProps> {
   openBrowser = async (url: string) => {
     this.state.browserDisplayed = true;
     await InAppBrowser.isAvailable();
-    const { type } = await InAppBrowser.open(url);
+    const { type } = await InAppBrowser.open(url, {
+      forceCloseOnRedirection: false,
+      showInRecents: true,
+    });
     this.dismissBrowser(type);
   };
 

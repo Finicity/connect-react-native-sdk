@@ -243,10 +243,17 @@ describe('Connect', () => {
       .mockImplementation(jest.fn());
 
     // Open Browser, and from above mock cancel
-    await instanceOf.openBrowser(instanceOf.state.connectUrl);
-    expect(spyOpen).toHaveBeenCalledTimes(1);
+    const url = 'https://finbank.com';
+    await instanceOf.openBrowser(url);
+    expect(spyOpen).toHaveBeenCalledWith(url, {
+      forceCloseOnRedirection: false,
+      showInRecents: true,
+    });
     expect(spyClose).toHaveBeenCalledTimes(0);
-    expect(postMessageMockFn).toHaveBeenCalledTimes(1);
+    expect(postMessageMockFn).toHaveBeenCalledWith({
+      type: 'window',
+      closed: true,
+    });
   });
 
   test('openBrowser/dismissBrowser (SDK dismiss)', async () => {
@@ -273,10 +280,17 @@ describe('Connect', () => {
       .mockImplementation(jest.fn());
 
     // Open Browser, and from above mock cancel
-    await instanceOf.openBrowser(instanceOf.state.connectUrl);
-    expect(spyOpen).toHaveBeenCalledTimes(1);
+    const url = 'https://finbank.com';
+    await instanceOf.openBrowser(url);
+    expect(spyOpen).toHaveBeenCalledWith(url, {
+      forceCloseOnRedirection: false,
+      showInRecents: true,
+    });
     expect(spyClose).toHaveBeenCalledTimes(1);
-    expect(postMessageMockFn).toHaveBeenCalledTimes(1);
+    expect(postMessageMockFn).toHaveBeenCalledWith({
+      type: 'window',
+      closed: true,
+    });
   });
 
   test('redirect Url', () => {
