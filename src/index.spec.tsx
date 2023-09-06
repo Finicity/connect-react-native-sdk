@@ -219,6 +219,63 @@ describe('Connect', () => {
     expect(postMessageMockFn).toHaveBeenCalledTimes(0);
   });
 
+  test('openBrowser (iOS)', async () => {
+    Platform.OS = 'ios';
+    const instanceOf = (renderer
+      .create(
+        <Connect
+          connectUrl="https://b2b.mastercard.com/open-banking-solutions/"
+          eventHandlers={eventHandlerFns}
+          linkingUri=""
+        />
+      )
+      .getInstance() as unknown) as Connect;
+    const postMessageMockFn = jest.fn();
+    instanceOf.postMessage = postMessageMockFn;
+    // Setup spies for InAppBrowser calls
+    jest
+      .spyOn(InAppBrowser, 'isAvailable')
+      .mockReturnValue(Promise.resolve(true));
+    const spyOpen = jest
+      .spyOn(InAppBrowser, 'open')
+      .mockImplementation(() => Promise.resolve({ type: 'cancel' }));
+
+    // Open Browser, and from above mock cancel
+    const url = 'https://finbank.com';
+    await instanceOf.openBrowser(url);
+    expect(spyOpen).toHaveBeenCalledWith(url, undefined);
+  });
+
+  test('openBrowser (Android)', async () => {
+    Platform.OS = 'android';
+    const instanceOf = (renderer
+      .create(
+        <Connect
+          connectUrl="https://b2b.mastercard.com/open-banking-solutions/"
+          eventHandlers={eventHandlerFns}
+          linkingUri=""
+        />
+      )
+      .getInstance() as unknown) as Connect;
+    const postMessageMockFn = jest.fn();
+    instanceOf.postMessage = postMessageMockFn;
+    // Setup spies for InAppBrowser calls
+    jest
+      .spyOn(InAppBrowser, 'isAvailable')
+      .mockReturnValue(Promise.resolve(true));
+    const spyOpen = jest
+      .spyOn(InAppBrowser, 'open')
+      .mockImplementation(() => Promise.resolve({ type: 'cancel' }));
+
+    // Open Browser, and from above mock cancel
+    const url = 'https://finbank.com';
+    await instanceOf.openBrowser(url);
+    expect(spyOpen).toHaveBeenCalledWith(url, {
+      forceCloseOnRedirection: false,
+      showInRecents: true,
+    });
+  });
+
   test('openBrowser/dismissBrowser (User cancels)', async () => {
     const instanceOf = (renderer
       .create(

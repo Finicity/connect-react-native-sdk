@@ -141,10 +141,12 @@ export class Connect extends Component<ConnectProps> {
   openBrowser = async (url: string) => {
     this.state.browserDisplayed = true;
     await InAppBrowser.isAvailable();
-    const { type } = await InAppBrowser.open(url, {
-      forceCloseOnRedirection: false,
-      showInRecents: true,
-    });
+    // NOTE: solves bug in InAppBrowser if an object with non-iOS options is passed
+    const browserOptions =
+      Platform.OS === 'ios'
+        ? undefined
+        : { forceCloseOnRedirection: false, showInRecents: true };
+    const { type } = await InAppBrowser.open(url, browserOptions);
     this.dismissBrowser(type);
   };
 
