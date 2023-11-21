@@ -17,7 +17,7 @@ stages:
 dependencies:
   stage: install
   script:
-    - npm ci
+    - yarn
   cache:
     key: ${CI_COMMIT_REF_SLUG}
     paths:
@@ -28,7 +28,7 @@ build:
   before_script:
     - sed -ri "s|\'PACKAGE_VERSION\'|\'$(node -p -e "require('./package.json').version")\'|" src/constants.ts # replace PACKAGE_VERSION with package.json version
   script:
-    - npm run build
+    - yarn build
   cache:
     key: ${CI_COMMIT_REF_SLUG}
     paths:
@@ -41,7 +41,7 @@ build:
 test:
   stage: test
   script:
-    - npm run test
+    - yarn test
   cache:
     key: ${CI_COMMIT_REF_SLUG}
     paths:
@@ -61,7 +61,7 @@ prettier:
       - node_modules/
     policy: pull # https://docs.gitlab.com/ee/ci/yaml/#cachepolicy
   script:
-    - npm run prettier-check
+    - yarn prettier-check
 
 checkmarx:manual:
   stage: scan
