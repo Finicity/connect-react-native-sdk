@@ -1,0 +1,139 @@
+image: node:14-alpine
+
+variables:
+  DEPLOY_IMAGE: "$CI_REGISTRY_IMAGE:$CI_PIPELINE_ID"
+  SCAN_IMAGE: "$CI_REGISTRY_IMAGE:$CI_PIPELINE_ID-scan"
+  SONAR_PROJECT_KEY: connect-react-native-sdk
+  SONAR_TOKEN: $SONAR_LOGIN
+  SONAR_URL: $SONAR_HOST_URL
+
+stages:
+  - install
+  - build
+  - test
+  - scan
+  - publish
+
+dependencies:
+  stage: install
+  script:
+    - npm ci
+  cache:
+    key: ${CI_COMMIT_REF_SLUG}
+    paths:
+      - node_modules/
+
+build:
+  stage: build
+  before_script:
+    - sed -ri "s|\'PACKAGE_VERSION\'|\'$(node -p -e "require('./package.json').version")\'|" src/constants.ts # replace PACKAGE_VERSION with package.json version
+  script:
+    - npm run build
+  cache:
+    key: ${CI_COMMIT_REF_SLUG}
+    paths:
+      - node_modules/
+    policy: pull
+  artifacts:
+    paths:
+      - dist/
+
+test:
+  stage: test
+  script:
+    - npm run test
+  cache:
+    key: ${CI_COMMIT_REF_SLUG}
+    paths:
+      - node_modules/
+    policy: pull
+  artifacts:
+    when: always
+    paths:
+      - coverage
+    expire_in: 1 days
+
+prettier:
+  stage: test
+  cache:
+    key: ${CI_COMMIT_REF_SLUG}
+    paths:
+      - node_modules/
+    policy: pull # https://docs.gitlab.com/ee/ci/yaml/#cachepolicy
+  script:
+    - npm run prettier-check
+
+checkmarx:manual:
+  stage: scan
+  image:
+    name: dcr.fini.city/images/cx-flow/master:latest
+  when: manual
+  before_script: []
+  script:
+    - java -noverify
+      -XX:+UnlockExperimentalVMOptions
+      -XX:+UseContainerSupport
+      -Djava.security.egd=file:/dev/./urandom
+      -jar /usr/src/app/cx-flow.jar
+      --spring.config.location=/usr/src/app/config.yml
+      --scan
+      --app=${CI_PROJECT_PATH_SLUG}
+      --cx-project=${CI_PROJECT_PATH_SLUG}
+      --repo-url=${CI_PROJECT_URL}/
+      --branch=${CI_COMMIT_REF_NAME}
+      --f=.
+  cache: {}
+  dependencies: []
+
+checkmarx:
+  extends: checkmarx:manual
+  only:
+    - master
+  when: on_success
+
+sonarqube:
+  stage: scan
+  image: ciricihq/gitlab-sonar-scanner
+  variables:
+    SONAR_ANALYSIS_MODE: publish
+  except:
+    variables:
+      - $CI_COMMIT_MESSAGE =~ /^WIP.*/
+  script:
+    - gitlab-sonar-scanner
+  allow_failure: true
+
+publish:
+  stage: publish
+  only:
+    - master
+  when: manual
+  script:
+    # https://www.npmjs.com/~mastercardapi
+    - echo -e "//registry.npmjs.org/:_authToken=${MASTERCARD_NPMJS_AUTOMATION_TOKEN}" > ./.npmrc
+    - npm whoami
+    - npm publish --access public
+  cache:
+    key: ${CI_COMMIT_REF_SLUG}
+    paths:
+      - node_modules/
+    policy: pull
+  artifacts:
+    paths:
+      - dist/
+
+publish:internal:
+  stage: publish
+  when: manual
+  script:
+    - rm -rf ./.npmrc
+    - echo -e "//nexus.fini.city/repository/npm-private/:_authToken=${NPM_AUTH_TOKEN}" > ./.npmrc
+    - npm publish --registry=https://nexus.fini.city/repository/npm-private/
+  cache:
+    key: ${CI_COMMIT_REF_SLUG}
+    paths:
+      - node_modules/
+    policy: pull
+  artifacts:
+    paths:
+      - dist/
