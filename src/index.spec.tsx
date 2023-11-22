@@ -1,42 +1,8 @@
-import React from 'react';
-import renderer from 'react-test-renderer';
-import { type ConnectEventHandlers, Connect } from './index';
-import InAppBrowser from 'react-native-inappbrowser-reborn';
-import {
-  ConnectEvents,
-  CONNECT_SDK_VERSION,
-  SDK_PLATFORM,
-  PING_TIMEOUT,
-} from './constants';
-import type { WebViewMessageEvent } from 'react-native-webview';
-import { Platform } from 'react-native';
-
 jest.mock('react-native-webview', () => ({
   default: () => jest.fn(), // or any mocked component instead of native view,
 }));
 
 describe('Connect', () => {
-  const eventHandlerFns: ConnectEventHandlers = {
-    onCancel: (event: any) => {
-      console.log('cancel event received', event);
-    },
-    onDone: (event: any) => {
-      console.log('done event received', event);
-    },
-    onError: (event: any) => {
-      console.log('error event received', event);
-    },
-    onLoad: () => {
-      console.log('loaded event received');
-    },
-    onRoute: (event: any) => {
-      console.log('route event received', event);
-    },
-    onUser: (event: any) => {
-      console.log('user event received', event);
-    },
-  };
-
   test('close', () => {
     // const instanceOf = renderer
     //   .create(
