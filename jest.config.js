@@ -157,6 +157,10 @@ module.exports = {
     '<rootDir>/example/node_modules',
     '<rootDir>/lib/',
   ],
+
+  transformIgnorePatterns: [
+    'node_modules/(?!((jest-)?react-native(-.*)?|@react-native(-community)?)/)',
+  ],
   // The regexp pattern or array of patterns that Jest uses to detect test files
   // testRegex: [],
 
