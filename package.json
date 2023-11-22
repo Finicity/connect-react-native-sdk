@@ -31,8 +31,10 @@
     "typecheck": "tsc --noEmit",
     "lint": "eslint \"**/*.{js,ts,tsx}\"",
     "clean": "del-cli android/build example/android/build example/android/app/build example/ios/build lib",
-    "prepare": "bob build",
-    "release": "release-it"
+    "build": "bob build",
+    "prettier-check": "prettier --check ./src/",
+    "release": "release-it",
+    "test:version_bump": "test $npm_package_version != $(npm show $npm_package_name version) || (echo 'Failing... You must bump package.json and package-lock.json' && exit 1)"
   },
   "keywords": [
     "Mastercard",
