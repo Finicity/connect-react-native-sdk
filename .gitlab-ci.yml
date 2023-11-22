@@ -9,7 +9,7 @@ variables:
 
 stages:
   - install
-  - builds
+  - build
   - test
   - scan
   - publish
