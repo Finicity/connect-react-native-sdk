@@ -4,6 +4,8 @@
 
 # XDE
 .expo/
+coverage/
+dist/
 
 # VSCode
 .vscode/
