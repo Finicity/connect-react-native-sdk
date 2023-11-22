@@ -1,4 +1,4 @@
-image: node:18-alpine
+image: node:20-alpine
 
 variables:
   DEPLOY_IMAGE: "$CI_REGISTRY_IMAGE:$CI_PIPELINE_ID"
