@@ -147,7 +147,6 @@
       ]
     ]
   },
-  "private": true,
   "dependencies": {
     "react-native-inappbrowser-reborn": ">=3.6",
     "react-native-webview": ">=11"
