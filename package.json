@@ -1,10 +1,13 @@
 {
   "name": "connect-react-native-sdk",
-  "version": "2.0.0-rc.1",
+  "version": "2.0.4-rc.1",
   "description": "React Native SDK for Mastercard Open Banking Connect",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",
   "types": "lib/typescript/src/index.d.ts",
+  "license": "MIT",
+  "author": "connect-react-native-sdk",
+  "homepage": "https://github.com",
   "react-native": "src/index",
   "source": "src/index",
   "files": [
@@ -75,9 +78,6 @@
     "react-native-webview": ">=11"
   },
   "packageManager": "yarn@1.22.21",
-  "engines": {
-    "node": ">= 18.0.0"
-  },
   "commitlint": {
     "extends": [
       "@commitlint/config-conventional"

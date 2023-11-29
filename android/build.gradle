@@ -23,6 +23,10 @@ def getExtOrDefault(name) {
   return rootProject.ext.has(name) ? rootProject.ext.get(name) : project.properties["ConnectReactNativeSdk_" + name]
 }
 
+def safeExtGet(prop,fallback) {
+  rootProject.ext.has(name) ? rootProject.ext.get(name): fallback
+}
+
 def getExtOrIntegerDefault(name) {
   return rootProject.ext.has(name) ? rootProject.ext.get(name) : (project.properties["ConnectReactNativeSdk_" + name]).toInteger()
 }
@@ -81,8 +85,16 @@ dependencies {
   // For < 0.71, this will be from the local maven repo
   // For > 0.71, this will be replaced by `com.facebook.react:react-android:$version` by react gradle plugin
   //noinspection GradleDynamicVersion
+
+  def androidXBrowserVersion=safeExtGet('androidXBrowserVersion',null)
+  def defaultAndroidXBrowserVersion= "1.4+"
+
+  if(androidXBrowserVersion==null){
+    androidXBrowserVersion= defaultAndroidXBrowserVersion
+  }
+  def androidXBrowser = safeExtGet('androidXBrowser',androidXBrowserVersion)
   implementation "com.facebook.react:react-native:+"
-  implementation 'androidx.browser:browser:1.5.0'
+  implementation "androidx.browser:browser:${androidXBrowser}"
 
 }
 
