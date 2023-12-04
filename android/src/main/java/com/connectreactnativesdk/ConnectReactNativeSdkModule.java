@@ -30,7 +30,7 @@ public class ConnectReactNativeSdkModule extends ReactContextBaseJavaModule {
   // Example method
   // See https://reactnative.dev/docs/native-modules-android
   @ReactMethod
-  public void checkLink(String url, Promise promise) {
+  public void checklink(String url, Promise promise) {
     Activity activity= getCurrentActivity();
     CustomTabsIntent intent = new CustomTabsIntent.Builder()
       .build();

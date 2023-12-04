@@ -29,6 +29,7 @@ export interface ConnectProps {
   connectUrl: string;
   eventHandlers: ConnectEventHandlers;
   linkingUri?: string;
+  redirectUrl?: string;
 }
 
 export interface ConnectCancelEvent {
@@ -97,11 +98,13 @@ export class Connect extends Component<ConnectProps> {
   }
 
   pingConnect = () => {
+    const { redirectUrl = '' } = this.props;
     if (this.webViewRef !== null) {
       this.postMessage({
         type: ConnectEvents.PING,
         sdkVersion: CONNECT_SDK_VERSION,
         platform: SDK_PLATFORM,
+        redirectUrl: redirectUrl,
       });
     } else {
       this.stopPingingConnect();
@@ -163,7 +166,7 @@ export class Connect extends Component<ConnectProps> {
           }
         });
       } else {
-        this.openBrowser(url);
+        checkLink(url);
       }
     } else if (
       eventType === ConnectEvents.CLOSE_POPUP &&
