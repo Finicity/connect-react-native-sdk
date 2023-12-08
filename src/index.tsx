@@ -2,12 +2,7 @@ import React, { Component } from 'react';
 import { Modal, Platform } from 'react-native';
 import { WebView } from 'react-native-webview';
 import { InAppBrowser } from 'react-native-inappbrowser-reborn';
-import {
-  ConnectEvents,
-  CONNECT_SDK_VERSION,
-  SDK_PLATFORM,
-  PING_TIMEOUT,
-} from './constants';
+import { ConnectEvents, SDK_PLATFORM, PING_TIMEOUT } from './constants';
 import checkLink from './deeplink';
 
 export interface ConnectEventHandlers {
@@ -102,7 +97,7 @@ export class Connect extends Component<ConnectProps> {
     if (this.webViewRef !== null) {
       this.postMessage({
         type: ConnectEvents.PING,
-        sdkVersion: CONNECT_SDK_VERSION,
+        sdkVersion: '2.0.20-rc.1',
         platform: SDK_PLATFORM,
         redirectUrl: redirectUrl,
       });
