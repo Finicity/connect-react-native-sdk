@@ -1,4 +1,4 @@
-package com.connectreactnativesdk;
+package com.mastercard.openbanking.connect.reactnativesdk;
 
 import androidx.annotation.NonNull;
 

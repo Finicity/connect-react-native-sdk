@@ -6,7 +6,7 @@ const LINKING_ERROR =
   '- You rebuilt the app after installing the package\n' +
   '- You are not using Expo Go\n';
 
-const ConnectReactNativeSdk = NativeModules.ConnectReactNativeSdk
+export const ConnectReactNativeSdk = NativeModules.ConnectReactNativeSdk
   ? NativeModules.ConnectReactNativeSdk
   : new Proxy(
       {},

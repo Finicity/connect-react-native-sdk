@@ -2,8 +2,13 @@ import React, { Component } from 'react';
 import { Modal, Platform } from 'react-native';
 import { WebView } from 'react-native-webview';
 import { InAppBrowser } from 'react-native-inappbrowser-reborn';
-import { ConnectEvents, SDK_PLATFORM, PING_TIMEOUT } from './constants';
-import checkLink from './deeplink';
+import {
+  ConnectEvents,
+  SDK_PLATFORM,
+  PING_TIMEOUT,
+  CONNECT_SDK_VERSION,
+} from './constants';
+import checkLink, { ConnectReactNativeSdk } from './deeplink';
 
 export interface ConnectEventHandlers {
   onDone: (event: ConnectDoneEvent) => void;
@@ -97,7 +102,7 @@ export class Connect extends Component<ConnectProps> {
     if (this.webViewRef !== null) {
       this.postMessage({
         type: ConnectEvents.PING,
-        sdkVersion: '2.0.20-rc.1',
+        sdkVersion: CONNECT_SDK_VERSION,
         platform: SDK_PLATFORM,
         redirectUrl: redirectUrl,
       });
@@ -133,7 +138,11 @@ export class Connect extends Component<ConnectProps> {
     if (this.state.browserDisplayed) {
       this.postMessage({ type: 'window', closed: true });
       this.state.browserDisplayed = false;
-      if (type !== 'cancel') InAppBrowser.close();
+      if (type !== 'cancel')
+        (Platform.OS === 'android'
+          ? ConnectReactNativeSdk
+          : InAppBrowser
+        ).close();
     }
   };
 
@@ -145,8 +154,16 @@ export class Connect extends Component<ConnectProps> {
       Platform.OS === 'ios'
         ? undefined
         : { forceCloseOnRedirection: false, showInRecents: true };
-    const { type } = await InAppBrowser.open(url, browserOptions);
-    this.dismissBrowser(type);
+
+    if (Platform.OS === 'android') {
+      const { type } = await ConnectReactNativeSdk.open({
+        url,
+      });
+      this.dismissBrowser(type);
+    } else {
+      const { type } = await InAppBrowser.open(url, browserOptions);
+      this.dismissBrowser(type);
+    }
   };
 
   handleEvent = (event: any) => {
@@ -161,7 +178,7 @@ export class Connect extends Component<ConnectProps> {
           }
         });
       } else {
-        checkLink(url);
+        this.openBrowser(url);
       }
     } else if (
       eventType === ConnectEvents.CLOSE_POPUP &&

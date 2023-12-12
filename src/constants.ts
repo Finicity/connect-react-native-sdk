@@ -1,4 +1,6 @@
-export const CONNECT_SDK_VERSION = 'PACKAGE_VERSION';
+import data from '../package.json';
+
+export const CONNECT_SDK_VERSION = data.version;
 export const SDK_PLATFORM = 'reactNative';
 export const PING_TIMEOUT = 1000;
 
