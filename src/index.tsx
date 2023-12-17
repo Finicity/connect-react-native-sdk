@@ -94,7 +94,7 @@ export class Connect extends Component<ConnectProps> {
   };
 
   postMessage(eventData: any) {
-    this.webViewRef?.postMessage(JSON.stringify(eventData));
+    this?.webViewRef?.postMessage(JSON.stringify(eventData));
   }
 
   pingConnect = () => {
@@ -208,11 +208,13 @@ export class Connect extends Component<ConnectProps> {
         animationType={'slide'}
         presentationStyle={Platform.OS === 'ios' ? 'pageSheet' : 'fullScreen'}
         transparent={false}
+        testID="test-modal"
         onRequestClose={() => this.close()}
       >
         <WebView
           ref={(ref: any) => (this.webViewRef = ref)}
           source={{ uri: this.state.connectUrl }}
+          testID="test-webview"
           onMessage={(event) => this.handleEvent(event)}
           onLoad={() => this.startPingingConnect()}
         />

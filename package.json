@@ -30,7 +30,7 @@
   ],
   "scripts": {
     "example": "yarn workspace connect-react-native-sdk-example",
-    "test": "jest ./src --config ./jest.config.js",
+    "test": "jest ./src",
     "typecheck": "tsc --noEmit",
     "lint": "eslint \"**/*.{js,ts,tsx}\"",
     "clean": "del-cli android/build example/android/build example/android/app/build example/ios/build lib",
@@ -44,10 +44,12 @@
     "Mastercard Open Banking Connect"
   ],
   "devDependencies": {
-    "@babel/preset-env": "^7.23.3",
+    "@babel/core": "7.23.6",
+    "@babel/preset-env": "7.23.6",
     "@commitlint/config-conventional": "^17.0.2",
     "@react-native/eslint-config": "^0.72.2",
     "@release-it/conventional-changelog": "^5.0.0",
+    "@testing-library/react-native": "^12.4.1",
     "@types/jest": "^28.1.2",
     "@types/react": "~17.0.21",
     "@types/react-native": "0.70.0",
@@ -63,7 +65,7 @@
     "react": "18.2.0",
     "react-native": "0.72.7",
     "react-native-builder-bob": "^0.20.0",
-    "react-test-renderer": "16.13",
+    "react-test-renderer": "18.2.0",
     "release-it": "^15.0.0",
     "turbo": "^1.10.7",
     "typescript": "^5.0.2"
