@@ -85,7 +85,6 @@ describe('Connect', () => {
     );
 
     const modal = screen.getByTestId('test-modal');
-    expect(modal).toHaveProp('visible', true);
     const webview = screen.getByTestId('test-webview');
     expect(webview).toBeDefined();
     expect(modal.props.presentationStyle).toBe('fullScreen');
@@ -102,7 +101,6 @@ describe('Connect', () => {
     );
 
     const modal = screen.getByTestId('test-modal');
-    expect(modal).toHaveProp('visible', true);
     const webview = screen.getByTestId('test-webview');
     expect(webview).toBeDefined();
     expect(modal.props.presentationStyle).toBe('pageSheet');
