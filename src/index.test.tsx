@@ -1,6 +1,6 @@
 import React from 'react';
 import renderer from 'react-test-renderer';
-import { Connect, type ConnectEventHandlers } from './index';
+import { Connect } from './index';
 import { render, screen } from '@testing-library/react-native';
 
 import { InAppBrowser } from 'react-native-inappbrowser-reborn';
@@ -13,6 +13,7 @@ import {
 } from './constants';
 import { Platform } from 'react-native';
 import type { WebViewMessageEvent } from 'react-native-webview';
+import type { ConnectEventHandlers } from './types';
 
 describe('Connect', () => {
   const eventHandlerFns: ConnectEventHandlers = {
