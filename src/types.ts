@@ -10,7 +10,6 @@ export interface ConnectEventHandlers {
 export interface ConnectProps {
   connectUrl: string;
   eventHandlers: ConnectEventHandlers;
-  linkingUri?: string;
   redirectUrl?: string;
 }
 

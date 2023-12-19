@@ -26,22 +26,16 @@ export class Connect extends Component<ConnectProps> {
     pingIntervalId: 0,
     eventHandlers: defaultEventHandlers,
     browserDisplayed: false,
-    linkingUri: '',
   };
 
   constructor(props: ConnectProps) {
     super(props);
-    this.launch(props.connectUrl, props.eventHandlers, props.linkingUri);
+    this.launch(props.connectUrl, props.eventHandlers);
   }
 
-  launch = (
-    connectUrl: string,
-    eventHandlers: ConnectEventHandlers,
-    linkingUri = ''
-  ) => {
+  launch = (connectUrl: string, eventHandlers: ConnectEventHandlers) => {
     this.state.connectUrl = connectUrl;
     this.state.eventHandlers = { ...defaultEventHandlers, ...eventHandlers };
-    this.state.linkingUri = linkingUri;
   };
 
   close = () => {

@@ -44,7 +44,6 @@ const MyConnectComponent = () => {
     <Connect
       connectUrl={'#GENERATED_CONNECT_URL#'}
       eventHandlers={eventHandlers}
-      linkingUri={'#UNIVERSAL_LINK#'}
     ></Connect>
   );
 };

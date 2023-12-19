@@ -43,7 +43,6 @@ describe('Connect', () => {
         <Connect
           connectUrl="https://b2b.mastercard.com/open-banking-solutions/"
           eventHandlers={eventHandlerFns}
-          linkingUri=""
         />
       )
       .getInstance() as unknown as Connect;
@@ -92,7 +91,6 @@ describe('Connect', () => {
         <Connect
           connectUrl="https://b2b.mastercard.com/open-banking-solutions/"
           eventHandlers={eventHandlerFns}
-          linkingUri=""
         />
       )
       .getInstance() as unknown as Connect;
@@ -114,7 +112,6 @@ describe('Connect', () => {
         <Connect
           connectUrl="https://b2b.mastercard.com/open-banking-solutions/"
           eventHandlers={eventHandlerFns}
-          linkingUri=""
         />
       )
       .getInstance() as unknown as Connect;
@@ -145,7 +142,6 @@ describe('Connect', () => {
         <Connect
           connectUrl="https://b2b.mastercard.com/open-banking-solutions/"
           eventHandlers={eventHandlerFns}
-          linkingUri=""
         />
       )
       .getInstance() as unknown as Connect;
@@ -175,7 +171,6 @@ describe('Connect', () => {
         <Connect
           connectUrl="https://b2b.mastercard.com/open-banking-solutions/"
           eventHandlers={eventHandlerFns}
-          linkingUri=""
         />
       )
       .getInstance() as unknown as Connect;
@@ -204,7 +199,6 @@ describe('Connect', () => {
         <Connect
           connectUrl="https://b2b.mastercard.com/open-banking-solutions/"
           eventHandlers={eventHandlerFns}
-          linkingUri=""
         />
       )
       .getInstance() as unknown as Connect;
@@ -223,7 +217,6 @@ describe('Connect', () => {
         <Connect
           connectUrl="https://b2b.mastercard.com/open-banking-solutions/"
           eventHandlers={eventHandlerFns}
-          linkingUri=""
         />
       )
       .getInstance() as unknown as Connect;
@@ -250,7 +243,6 @@ describe('Connect', () => {
         <Connect
           connectUrl="https://b2b.mastercard.com/open-banking-solutions/"
           eventHandlers={eventHandlerFns}
-          linkingUri=""
         />
       )
       .getInstance() as unknown as Connect;
@@ -273,45 +265,12 @@ describe('Connect', () => {
     expect(mockLoadedEventFn).toHaveBeenCalledTimes(1);
   });
 
-  test('launch', () => {
-    const evHandlers = { ...eventHandlerFns };
-    delete evHandlers.onLoad;
-    delete evHandlers.onRoute;
-    delete evHandlers.onUser;
-
-    const instanceOf = renderer
-      .create(
-        <Connect
-          connectUrl="https://b2b.mastercard.com/open-banking-solutions/"
-          eventHandlers={evHandlers}
-          linkingUri="testApp"
-        />
-      )
-      .getInstance() as unknown as Connect;
-
-    expect(instanceOf.state.connectUrl).toBe(
-      'https://b2b.mastercard.com/open-banking-solutions/'
-    );
-    expect(instanceOf.state.eventHandlers.onLoad).toBeDefined();
-    expect(instanceOf.state.eventHandlers.onRoute).toBeDefined();
-    expect(instanceOf.state.eventHandlers.onUser).toBeDefined();
-
-    // check for empty linkingUri
-    instanceOf.launch(
-      'https://b2b.mastercard.com/open-banking-solutions/',
-      evHandlers,
-      undefined
-    );
-    expect(instanceOf.state.linkingUri).toEqual('');
-  });
-
   test('parseEventData', () => {
     const instanceOf = renderer
       .create(
         <Connect
           connectUrl="https://b2b.mastercard.com/open-banking-solutions/"
           eventHandlers={eventHandlerFns}
-          linkingUri=""
         />
       )
       .getInstance() as unknown as Connect;
@@ -365,7 +324,6 @@ describe('Connect', () => {
         <Connect
           connectUrl="https://b2b.mastercard.com/open-banking-solutions/"
           eventHandlers={eventHandlerFns}
-          linkingUri=""
         />
       )
       .getInstance() as unknown as Connect;
@@ -399,7 +357,6 @@ describe('Connect', () => {
         <Connect
           connectUrl="https://b2b.mastercard.com/open-banking-solutions/"
           eventHandlers={eventHandlerFns}
-          linkingUri=""
         />
       )
       .getInstance() as unknown as Connect;
@@ -433,7 +390,6 @@ describe('Connect', () => {
         <Connect
           connectUrl="https://b2b.mastercard.com/open-banking-solutions/"
           eventHandlers={eventHandlerFns}
-          linkingUri=""
         />
       )
       .getInstance() as unknown as Connect;
@@ -467,7 +423,6 @@ describe('Connect', () => {
         <Connect
           connectUrl="https://b2b.mastercard.com/open-banking-solutions/"
           eventHandlers={eventHandlerFns}
-          linkingUri=""
         />
       )
       .getInstance() as unknown as Connect;
@@ -501,7 +456,6 @@ describe('Connect', () => {
         <Connect
           connectUrl="https://b2b.mastercard.com/open-banking-solutions/"
           eventHandlers={eventHandlerFns}
-          linkingUri=""
         />
       )
       .getInstance() as unknown as Connect;
@@ -527,7 +481,6 @@ describe('Connect', () => {
         <Connect
           connectUrl="https://b2b.mastercard.com/open-banking-solutions/"
           eventHandlers={eventHandlerFns}
-          linkingUri=""
         />
       )
       .getInstance() as unknown as Connect;
