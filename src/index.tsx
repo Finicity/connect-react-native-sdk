@@ -8,56 +8,14 @@ import {
   PING_TIMEOUT,
   CONNECT_SDK_VERSION,
 } from './constants';
-import checkLink, { ConnectReactNativeSdk } from './deeplink';
-
-export interface ConnectEventHandlers {
-  onDone: (event: ConnectDoneEvent) => void;
-  onCancel: (event: ConnectCancelEvent) => void;
-  onError: (event: ConnectErrorEvent) => void;
-  onRoute?: (event: ConnectRouteEvent) => void;
-  onUser?: (event: any) => void;
-  onLoad?: () => void;
-}
+import { ConnectReactNativeSdk, checkLink } from './nativeModule';
+import type { ConnectEventHandlers, ConnectProps } from './types';
 
 const defaultEventHandlers: any = {
   onLoad: () => {},
   onUser: () => {},
   onRoute: () => {},
 };
-
-export interface ConnectProps {
-  connectUrl: string;
-  eventHandlers: ConnectEventHandlers;
-  linkingUri?: string;
-  redirectUrl?: string;
-}
-
-export interface ConnectCancelEvent {
-  code: number;
-  reason: string;
-}
-
-export interface ConnectErrorEvent {
-  code: number;
-  reason: string;
-}
-
-export interface ConnectDoneEvent {
-  code: number;
-  reason: string;
-  reportData: [
-    {
-      portfolioId: string;
-      type: string;
-      reportId: string;
-    }
-  ];
-}
-
-export interface ConnectRouteEvent {
-  screen: string;
-  params: any;
-}
 
 export class Connect extends Component<ConnectProps> {
   webViewRef: WebView | null = null;
@@ -159,6 +117,7 @@ export class Connect extends Component<ConnectProps> {
       const { type } = await ConnectReactNativeSdk.open({
         url,
       });
+
       this.dismissBrowser(type);
     } else {
       const { type } = await InAppBrowser.open(url, browserOptions);
@@ -172,7 +131,7 @@ export class Connect extends Component<ConnectProps> {
     if (eventType === ConnectEvents.URL && !this.state.browserDisplayed) {
       const url = eventData.url;
       if (Platform.OS === 'ios') {
-        checkLink(url).then((canOpen) => {
+        checkLink(url).then((canOpen: boolean) => {
           if (!canOpen) {
             this.openBrowser(url);
           }

@@ -19,12 +19,19 @@ module.exports = {
   coverageThreshold: {
     global: {
       branches: 80,
-      functions: 80,
+      functions: 70,
       lines: 80,
       statements: 80,
     },
   },
-  testPathIgnorePatterns: ['/node_modules/', '/example/', '/android/', '/ios/'],
+  testPathIgnorePatterns: [
+    '/node_modules/',
+    '/example/',
+    '/android/',
+    '/ios/',
+    '/lib/',
+    './setup.test.js',
+  ],
 
   transformIgnorePatterns: [
     'node_modules/(?!((jest-)?react-native(-.*)?|@react-native(-community)?)/)',

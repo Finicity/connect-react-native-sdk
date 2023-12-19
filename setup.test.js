@@ -18,3 +18,30 @@ jest.mock('react-native/Libraries/TurboModule/TurboModuleRegistry', () => {
     },
   };
 });
+
+jest.mock('./src/nativeModule', () => {
+  return {
+    checkLink: jest.fn().mockResolvedValue(false),
+    ConnectReactNativeSdk: {
+      close: jest.fn(),
+      open: jest.fn().mockResolvedValue({
+        type: 'close',
+      }),
+    },
+  };
+});
+
+jest.mock('react-native-inappbrowser-reborn', () => {
+  const InAppBrowser = {
+    open: jest.fn().mockResolvedValue({
+      type: 'close',
+    }),
+    close: jest.fn(),
+    openAuth: jest.fn(),
+    closeAuth: jest.fn(),
+    isAvailable: jest.fn(),
+  };
+  return {
+    InAppBrowser,
+  };
+});

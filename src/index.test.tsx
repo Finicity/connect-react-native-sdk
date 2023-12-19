@@ -3,37 +3,16 @@ import renderer from 'react-test-renderer';
 import { Connect, type ConnectEventHandlers } from './index';
 import { render, screen } from '@testing-library/react-native';
 
-import InAppBrowser from 'react-native-inappbrowser-reborn';
-import ConnectCheckLink from './deeplink';
+import { InAppBrowser } from 'react-native-inappbrowser-reborn';
+import { checkLink } from './nativeModule';
 import {
   ConnectEvents,
   CONNECT_SDK_VERSION,
   SDK_PLATFORM,
   PING_TIMEOUT,
 } from './constants';
-import { NativeModules, Platform } from 'react-native';
+import { Platform } from 'react-native';
 import type { WebViewMessageEvent } from 'react-native-webview';
-
-describe('ConnectReactNativeSdk', () => {
-  test('checklink', () => {
-    const url = 'https://mastercard.com';
-    ConnectCheckLink(url);
-    expect(NativeModules.ConnectReactNativeSdk.checklink).toHaveBeenCalledTimes(
-      1
-    );
-  });
-
-  test('checklink with erro', async () => {
-    NativeModules.ConnectReactNativeSdk = null;
-    const url = 'https://mastercard.com';
-    try {
-      await ConnectCheckLink(url);
-      console.log('Error');
-    } catch (error) {
-      expect(error).toBe('Error');
-    }
-  });
-});
 
 describe('Connect', () => {
   const eventHandlerFns: ConnectEventHandlers = {
@@ -127,6 +106,68 @@ describe('Connect', () => {
     expect(instanceOf.postMessage).not.toThrow();
   });
 
+  test('open Browser ios', () => {
+    Platform.OS = 'ios';
+    const instanceOf = renderer
+      .create(
+        <Connect
+          connectUrl="https://b2b.mastercard.com/open-banking-solutions/"
+          eventHandlers={eventHandlerFns}
+          linkingUri=""
+        />
+      )
+      .getInstance() as unknown as Connect;
+    // create route event
+    const event = {
+      nativeEvent: {
+        data: '',
+      },
+    } as WebViewMessageEvent;
+
+    instanceOf.state.browserDisplayed = false;
+    event.nativeEvent.data = JSON.stringify({
+      type: ConnectEvents.URL,
+      url: 'https://b2b.mastercard.com',
+    });
+    // mock route event callback
+    const mockFn = jest.fn();
+    instanceOf.state.eventHandlers.onRoute = mockFn;
+    instanceOf.handleEvent(event);
+    expect(checkLink).toHaveBeenCalledTimes(1);
+    expect(checkLink).toHaveBeenLastCalledWith('https://b2b.mastercard.com');
+  });
+
+  test('open Browser android', () => {
+    Platform.OS = 'android';
+    const instanceOf = renderer
+      .create(
+        <Connect
+          connectUrl="https://b2b.mastercard.com/open-banking-solutions/"
+          eventHandlers={eventHandlerFns}
+          linkingUri=""
+        />
+      )
+      .getInstance() as unknown as Connect;
+    // create route event
+    const event = {
+      nativeEvent: {
+        data: '',
+      },
+    } as WebViewMessageEvent;
+    instanceOf.state.browserDisplayed = false;
+    event.nativeEvent.data = JSON.stringify({
+      type: ConnectEvents.URL,
+      url: 'https://b2b.mastercard.com',
+    });
+    // mock route event callback
+    const mockFn = jest.fn();
+    instanceOf.dismissBrowser = jest.fn();
+    instanceOf.state.eventHandlers.onRoute = mockFn;
+    instanceOf.handleEvent(event);
+    instanceOf.openBrowser('https://b2b.mastercard.com');
+    expect(instanceOf.dismissBrowser).not.toHaveBeenCalled();
+  });
+
   test('pingConnect', () => {
     const instanceOf = renderer
       .create(
@@ -169,13 +210,9 @@ describe('Connect', () => {
     const postMessageMockFn = jest.fn();
     instanceOf.postMessage = postMessageMockFn;
 
-    const spyClose = jest
-      .spyOn(InAppBrowser, 'close')
-      .mockImplementation(jest.fn());
-
     instanceOf.state.browserDisplayed = false;
     await instanceOf.dismissBrowser();
-    expect(spyClose).toHaveBeenCalledTimes(0);
+    expect(InAppBrowser.close).toHaveBeenCalledTimes(0);
     expect(postMessageMockFn).toHaveBeenCalledTimes(0);
   });
 

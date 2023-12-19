@@ -8,15 +8,8 @@ const LINKING_ERROR =
 
 export const ConnectReactNativeSdk = NativeModules.ConnectReactNativeSdk
   ? NativeModules.ConnectReactNativeSdk
-  : new Proxy(
-      {},
-      {
-        get() {
-          throw new Error(LINKING_ERROR);
-        },
-      }
-    );
+  : new Error(LINKING_ERROR);
 
-export default function checkLink(url: string): Promise<boolean> {
-  return ConnectReactNativeSdk.checklink(url);
+export function checkLink(url: string): Promise<boolean> {
+  return ConnectReactNativeSdk?.checklink(url);
 }
