@@ -4,58 +4,18 @@ import { WebView } from 'react-native-webview';
 import { InAppBrowser } from 'react-native-inappbrowser-reborn';
 import {
   ConnectEvents,
-  CONNECT_SDK_VERSION,
   SDK_PLATFORM,
   PING_TIMEOUT,
+  CONNECT_SDK_VERSION,
 } from './constants';
-
-export interface ConnectEventHandlers {
-  onDone: (event: ConnectDoneEvent) => void;
-  onCancel: (event: ConnectCancelEvent) => void;
-  onError: (event: ConnectErrorEvent) => void;
-  onRoute?: (event: ConnectRouteEvent) => void;
-  onUser?: (event: any) => void;
-  onLoad?: () => void;
-}
+import { ConnectReactNativeSdk, checkLink } from './nativeModule';
+import type { ConnectEventHandlers, ConnectProps } from './types';
 
 const defaultEventHandlers: any = {
   onLoad: () => {},
-  onUser: (event: any) => {},
-  onRoute: (event: ConnectRouteEvent) => {},
+  onUser: () => {},
+  onRoute: () => {},
 };
-
-export interface ConnectProps {
-  connectUrl: string;
-  eventHandlers: ConnectEventHandlers;
-  linkingUri?: string;
-}
-
-export interface ConnectCancelEvent {
-  code: number;
-  reason: string;
-}
-
-export interface ConnectErrorEvent {
-  code: number;
-  reason: string;
-}
-
-export interface ConnectDoneEvent {
-  code: number;
-  reason: string;
-  reportData: [
-    {
-      portfolioId: string;
-      type: string;
-      reportId: string;
-    }
-  ];
-}
-
-export interface ConnectRouteEvent {
-  screen: string;
-  params: any;
-}
 
 export class Connect extends Component<ConnectProps> {
   webViewRef: WebView | null = null;
@@ -66,22 +26,16 @@ export class Connect extends Component<ConnectProps> {
     pingIntervalId: 0,
     eventHandlers: defaultEventHandlers,
     browserDisplayed: false,
-    linkingUri: '',
   };
 
   constructor(props: ConnectProps) {
     super(props);
-    this.launch(props.connectUrl, props.eventHandlers, props.linkingUri);
+    this.launch(props.connectUrl, props.eventHandlers);
   }
 
-  launch = (
-    connectUrl: string,
-    eventHandlers: ConnectEventHandlers,
-    linkingUri = ''
-  ) => {
+  launch = (connectUrl: string, eventHandlers: ConnectEventHandlers) => {
     this.state.connectUrl = connectUrl;
     this.state.eventHandlers = { ...defaultEventHandlers, ...eventHandlers };
-    this.state.linkingUri = linkingUri;
   };
 
   close = () => {
@@ -92,15 +46,17 @@ export class Connect extends Component<ConnectProps> {
   };
 
   postMessage(eventData: any) {
-    this.webViewRef?.postMessage(JSON.stringify(eventData));
+    this?.webViewRef?.postMessage(JSON.stringify(eventData));
   }
 
   pingConnect = () => {
+    const { redirectUrl = '' } = this.props;
     if (this.webViewRef !== null) {
       this.postMessage({
         type: ConnectEvents.PING,
         sdkVersion: CONNECT_SDK_VERSION,
         platform: SDK_PLATFORM,
+        redirectUrl: redirectUrl,
       });
     } else {
       this.stopPingingConnect();
@@ -134,7 +90,11 @@ export class Connect extends Component<ConnectProps> {
     if (this.state.browserDisplayed) {
       this.postMessage({ type: 'window', closed: true });
       this.state.browserDisplayed = false;
-      if (type !== 'cancel') InAppBrowser.close();
+      if (type !== 'cancel')
+        (Platform.OS === 'android'
+          ? ConnectReactNativeSdk
+          : InAppBrowser
+        ).close();
     }
   };
 
@@ -146,8 +106,17 @@ export class Connect extends Component<ConnectProps> {
       Platform.OS === 'ios'
         ? undefined
         : { forceCloseOnRedirection: false, showInRecents: true };
-    const { type } = await InAppBrowser.open(url, browserOptions);
-    this.dismissBrowser(type);
+
+    if (Platform.OS === 'android') {
+      const { type } = await ConnectReactNativeSdk.open({
+        url,
+      });
+
+      this.dismissBrowser(type);
+    } else {
+      const { type } = await InAppBrowser.open(url, browserOptions);
+      this.dismissBrowser(type);
+    }
   };
 
   handleEvent = (event: any) => {
@@ -155,7 +124,15 @@ export class Connect extends Component<ConnectProps> {
     const eventType = eventData.type;
     if (eventType === ConnectEvents.URL && !this.state.browserDisplayed) {
       const url = eventData.url;
-      this.openBrowser(url);
+      if (Platform.OS === 'ios') {
+        checkLink(url).then((canOpen: boolean) => {
+          if (!canOpen) {
+            this.openBrowser(url);
+          }
+        });
+      } else {
+        this.openBrowser(url);
+      }
     } else if (
       eventType === ConnectEvents.CLOSE_POPUP &&
       this.state.browserDisplayed
@@ -184,11 +161,13 @@ export class Connect extends Component<ConnectProps> {
         animationType={'slide'}
         presentationStyle={Platform.OS === 'ios' ? 'pageSheet' : 'fullScreen'}
         transparent={false}
+        testID="test-modal"
         onRequestClose={() => this.close()}
       >
         <WebView
           ref={(ref: any) => (this.webViewRef = ref)}
           source={{ uri: this.state.connectUrl }}
+          testID="test-webview"
           onMessage={(event) => this.handleEvent(event)}
           onLoad={() => this.startPingingConnect()}
         />
