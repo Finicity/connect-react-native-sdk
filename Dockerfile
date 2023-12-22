@@ -1,7 +1,9 @@
 FROM node:20.9.0-alpine as build
-COPY package.json /usr/src
-COPY * /usr/src
-RUN cd /usr/src
+WORKDIR /home/code
+RUN apk update & apk upgrade
+RUN chmod -R 777 /home/code
+COPY . ./
+RUN cd /home/code
 RUN npm pack
 
 
