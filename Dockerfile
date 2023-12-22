@@ -1,7 +1,9 @@
-COPY *.tgz /usr/code
-COPY /usr/code/*.tgz /usr/code/app.tgz
+FROM node:20.9.0-alpine as build
+RUN apk update && apk upgrade
+COPY . /usr/code
+RUN cd /usr/code
+RUN npm pack
 
 FROM node:20.9.0-alpine
-RUN apk update && apk upgrade
-RUN cd /usr/code
+COPY --from=build /usr/code/*.tgz app.tgz
 RUN npm install app.tgz
