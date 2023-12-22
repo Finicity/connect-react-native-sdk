@@ -37,7 +37,7 @@ build:
     policy: pull
   artifacts:
     paths:
-      - dist/
+      - build/
 
 test:
   stage: test
