@@ -37,7 +37,7 @@ build:
     policy: pull
   artifacts:
     paths:
-      - build/
+      - dist/
 
 test:
   stage: test
@@ -77,6 +77,7 @@ docker:
     - 'wget -O cosign --header="JOB-TOKEN: $CI_JOB_TOKEN" ${CI_API_V4_URL}/projects/2759/packages/generic/cosign/v2.0.0/cosign-linux-amd64'
     - chmod +x cosign
     - mv cosign /bin
+    - npm pack
   script:
     - docker build --pull -t $CI_REGISTRY_IMAGE:$CI_PIPELINE_ID .
     - docker push $CI_REGISTRY_IMAGE:$CI_PIPELINE_ID
