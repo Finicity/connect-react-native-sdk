@@ -119,7 +119,20 @@ sonarqube:
       - $CI_COMMIT_MESSAGE =~ /^WIP.*/
   script:
     - gitlab-sonar-scanner
-  allow_failure: true
+  allow_failure: false
+
+twistlock:
+  stage: scan
+  variables:
+    GIT_STRATEGY: none
+  image: dcr.fini.city/devops/osiris
+  cache: {}
+  script:
+    - scan_container $CI_REGISTRY_IMAGE:$CI_PIPELINE_ID
+  allow_failure: false
+  only:
+    - merge_requests
+    - master
 
 publish:
   stage: publish
