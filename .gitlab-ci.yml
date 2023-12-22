@@ -130,9 +130,6 @@ twistlock:
   script:
     - scan_container $CI_REGISTRY_IMAGE:$CI_PIPELINE_ID
   allow_failure: false
-  only:
-    - merge_requests
-    - master
 
 publish:
   stage: publish
