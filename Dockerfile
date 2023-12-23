@@ -8,4 +8,3 @@ RUN npm pack
 
 FROM node:20.9.0-alpine
 COPY --from=build /home/code/*.tgz app.tgz
-RUN npm install app.tgz
