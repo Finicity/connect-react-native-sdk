@@ -1,4 +1,4 @@
-FROM node:20.9.0-alpine as build
+FROM node:slim:latest as build
 WORKDIR /home/code
 RUN chmod -R 777 /home/code
 COPY . ./
@@ -6,5 +6,5 @@ RUN cd /home/code
 RUN npm pack
 
 
-FROM node:20.9.0-alpine
+FROM node:slim:latest
 COPY --from=build /home/code/*.tgz app.tgz
