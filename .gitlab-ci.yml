@@ -11,6 +11,7 @@ stages:
   - install
   - build
   - test
+  - dockerize
   - scan
   - publish
 
@@ -63,6 +64,23 @@ prettier:
   script:
     - yarn prettier-check
 
+docker:
+  image: docker:stable
+  stage: dockerize
+  cache:
+    key: ${CI_COMMIT_REF_SLUG}
+    paths:
+      - node_modules/
+    policy: pull # https://docs.gitlab.com/ee/ci/yaml/#cachepolicy
+  before_script:
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+    - 'wget -O cosign --header="JOB-TOKEN: $CI_JOB_TOKEN" ${CI_API_V4_URL}/projects/2759/packages/generic/cosign/v2.0.0/cosign-linux-amd64'
+    - chmod +x cosign
+    - mv cosign /bin
+  script:
+    - docker build --pull -t $CI_REGISTRY_IMAGE:$CI_PIPELINE_ID .
+    - docker push $CI_REGISTRY_IMAGE:$CI_PIPELINE_ID
+
 checkmarx:manual:
   stage: scan
   image:
@@ -101,7 +119,17 @@ sonarqube:
       - $CI_COMMIT_MESSAGE =~ /^WIP.*/
   script:
     - gitlab-sonar-scanner
-  allow_failure: true
+  allow_failure: false
+
+twistlock:
+  stage: scan
+  variables:
+    GIT_STRATEGY: none
+  image: dcr.fini.city/devops/osiris
+  cache: {}
+  script:
+    - scan_container $CI_REGISTRY_IMAGE:$CI_PIPELINE_ID
+  allow_failure: false
 
 publish:
   stage: publish
