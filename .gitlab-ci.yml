@@ -81,11 +81,10 @@ docker:
     - docker build --pull -t $CI_REGISTRY_IMAGE:$CI_PIPELINE_ID .
     - docker push $CI_REGISTRY_IMAGE:$CI_PIPELINE_ID
 
-checkmarx:manual:
+checkmarx:
   stage: scan
   image:
     name: dcr.fini.city/images/cx-flow/master:latest
-  when: manual
   before_script: []
   script:
     - java -noverify
@@ -102,12 +101,6 @@ checkmarx:manual:
       --f=.
   cache: {}
   dependencies: []
-
-checkmarx:
-  extends: checkmarx:manual
-  only:
-    - master
-  when: on_success
 
 sonarqube:
   stage: scan
