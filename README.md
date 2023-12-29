@@ -12,7 +12,7 @@ The Connect React Native SDK supports following android and iOS version.
 * Android : Android 5.0 (Lollipop) or later & minSdkVersion 21 or later
 * The Connect React Native SDK supports iOS 11 or later.
 
-WARNING:Support for deepLinkUrl parameters is deprecated from Connect React Native SDK version 2.0.0, going forward please use the redirectUrl parameter which supports both universal and deep links. For more information see [Github documentation](https://github.com/Mastercard/connect-android-sdk/blob/main/README.md)
+WARNING:Support for deepLinkUrl parameters is deprecated from Connect React Native SDK version 2.0.0, going forward please use the redirectUrl parameter which supports both universal and deep links. For more information see [Github documentation](https://github.com/Finicity/connect-react-native-sdk/blob/master/README.md)
 
 ## Installation
 
@@ -30,7 +30,7 @@ The Connect React Native SDK has the following `peerDependencies`:
 
 If you application doesn't use `react-native-inappbrowser-reborn` and `react-native-webview` as dependencies. Install using following documentation
 1. [react-native-inappbrowser-reborn](https://github.com/proyecto26/react-native-inappbrowser)
-2. [react-native-webview] (https://github.com/react-native-webview/react-native-webview)
+2. [react-native-webview](https://github.com/react-native-webview/react-native-webview)
 
 **Note: Recommended versions with which its tested is react-native-inappbrowser-reborn: 3.7.0 and react-native-webview: 13.6.3**
 
@@ -154,7 +154,7 @@ Any application can register custom URL schemes and there is no further validati
 
 ### Android
 ### Create your domain's redirectUrl
-For information on how to create a [App Linksopens in a new tab](https://developer.android.com/training/app-links#android-app-links) as redirectUrl in your application, see [adding Android App Linksopens in a new tab](https://developer.android.com/studio/write/app-link-indexing) for details.
+For information on how to create a [App Links](https://developer.android.com/training/app-links#android-app-links) as redirectUrl in your application, see [adding Android App Links](https://developer.android.com/studio/write/app-link-indexing) for details.
 
 ---
 NOTE:
