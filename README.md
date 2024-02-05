@@ -12,7 +12,7 @@ The Connect React Native SDK supports following android and iOS version.
 * Android : Android 5.0 (Lollipop) or later & minSdkVersion 21 or later
 * The Connect React Native SDK supports iOS 11 or later.
 
-WARNING:Support for deepLinkUrl parameters is deprecated from Connect React Native SDK version 2.0.0, going forward please use the redirectUrl parameter which supports both universal and deep links. For more information see [Github documentation](https://github.com/Finicity/connect-react-native-sdk/blob/master/README.md)
+WARNING: The redirectUrl property, supporting universal links on android, app links on iOS, and deeplinks, is available from Connect React Native SDK version 2.0.0 onward.
 
 ## Installation
 
@@ -71,7 +71,7 @@ The Connect React Native SDK requires internet access to connect with our server
 | Props | Description |
 | ------ | ------ |
 | `connectUrl` (required) | The SDK loads the Connect URL. |
-| `eventHandlers` (required) | A Object implementing the ConnectEventHandlers methods. |
+| `eventHandlers` (required) | An Object implementing the ConnectEventHandlers methods. |
 | `redirectUrl` (optional) | App link URL/ Deep link URL to redirect back to your mobile app after completing FI’s OAuth flow. This parameter is only required for App to App. |
 
 See [Generate 2.0 Connect URL APIs](https://developer.mastercard.com/open-banking-us/documentation/connect/generate-2-connect-url-apis/) for `connectUrl` generation
@@ -190,5 +190,5 @@ For information on how to configure your server see [supporting associated doma
 
 | Version | Compatibility |
 | ------- | ------------- |
-| 1.x     | React 16+     |
-| 2.x     | React 16+     |
+| 1.x     | React 16+, React Native >=0.63  |
+| 2.x     | React 16+, React Native >=0.63  |

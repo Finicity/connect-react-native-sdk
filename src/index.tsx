@@ -110,6 +110,7 @@ export class Connect extends Component<ConnectProps> {
     if (Platform.OS === 'android') {
       const { type } = await ConnectReactNativeSdk.open({
         url,
+        ...(browserOptions || {}),
       });
 
       this.dismissBrowser(type);
