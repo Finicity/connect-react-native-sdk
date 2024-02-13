@@ -186,6 +186,10 @@ Here is an example of a universal link redirectUrl within your code: 
 For information on how to configure your server see [supporting associated domains](https://developer.apple.com/documentation/xcode/supporting-associated-domains)
 
 
+## Sample App
+[Github](https://github.com/Mastercard/connect-react-native-sdk/tree/master/ConnectReactNativeDemoApp) contains a sample React Native project (version 0.72) that is integrated with the Connect React Native SDK. This sample project is named `ConnectReactNativeDemoApp`. Please ensure that you have the necessary setup for React Native version 0.72 to successfully run and explore this demo application.
+
+
 ## Version compatibility
 
 | Version | Compatibility |
