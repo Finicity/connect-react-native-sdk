@@ -1,5 +1,9 @@
 # Changelog
 
+### 2.0.1 (March 28, 2024)
+
+- Resolved the "cannot find module" type error that occurred during the import of the 'connect' module.
+
 ### 2.0.0 (February 8, 2024)
 
 - Enhanced the App to App OAuth Flow with the newly added `redirectUrl` parameter in the Connect React Native SDK. This enhancement supports universal links for iOS, app links for Android, and deep links for navigation between mobile apps. For more details on App to App, refer to the [documentation](https://developer.mastercard.com/open-banking-us/documentation/connect/mobile-sdks/).

@@ -184,3 +184,5 @@ function parseEventData(eventData: any) {
     return {};
   }
 }
+
+export * from './types';
