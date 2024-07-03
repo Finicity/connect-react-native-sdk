@@ -1,5 +1,11 @@
 # Changelog
 
+### 2.0.2 (July 3, 2024)
+
+### Changes
+
+- Added a fix to resolve an issue with App To App OAuth flow
+
 ### 2.0.1 (March 28, 2024)
 
 - Resolved the "cannot find module" type error that occurred during the import of the 'connect' module.

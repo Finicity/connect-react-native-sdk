@@ -157,6 +157,13 @@ export class Connect extends Component<ConnectProps> {
   };
 
   render() {
+    const injectedJavaScript = `
+      (function() {
+        window.maOBConnectReactNative = window.maOBConnectReactNative || true;
+        window.ReactNativeWebView = window.ReactNativeWebView || true;
+      })();
+    `;
+
     return (
       <Modal
         animationType={'slide'}
@@ -168,6 +175,8 @@ export class Connect extends Component<ConnectProps> {
         <WebView
           ref={(ref: any) => (this.webViewRef = ref)}
           source={{ uri: this.state.connectUrl }}
+          javaScriptEnabled
+          injectedJavaScriptBeforeContentLoaded={injectedJavaScript}
           testID="test-webview"
           onMessage={(event) => this.handleEvent(event)}
           onLoad={() => this.startPingingConnect()}
